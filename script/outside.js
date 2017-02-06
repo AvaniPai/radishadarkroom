@@ -232,6 +232,8 @@ var Outside = {
 	later: function(){
 			var later = $('#laterButton.button');
 			later.hide();
+			var exploreB = $('#exploreButton.button');
+			exploreB.hide();
 			Notifications.notify(Room,_("{0} goes back to the room.",Engine.x_name));
 			Notifications.notify(Room,_("There is not much to do in the room."));
 			new Button.Button({
