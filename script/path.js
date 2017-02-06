@@ -34,8 +34,8 @@ var Path = {
 			.appendTo('div#locationSlider');
 		
 		// Add the outfitting area
-		var outfitting = $('<div>').attr({'id': 'outfitting', 'data-legend': _('supplies:')}).appendTo(this.panel);
-		$('<div>').attr('id', 'bagspace').appendTo(outfitting);
+		/*var outfitting = $('<div>').attr({'id': 'outfitting', 'data-legend': _('supplies:')}).appendTo(this.panel);
+		$('<div>').attr('id', 'bagspace').appendTo(outfitting);*/
 		
 		// Add the embark button
 		new Button.Button({
@@ -44,9 +44,9 @@ var Path = {
 			click: Path.walk,
 			width: '80px',
 			cooldown: Outside._GATHER_DELAY,
-		}).appendTo(this.panel);
+		}).appendTo('div#pathPanel');
 		
-		Path.outfit = $SM.get('outfit');
+		//Path.outfit = $SM.get('outfit');
 		
 		Engine.updateSlider();
 		
@@ -61,32 +61,36 @@ var Path = {
 			click: Path.back,
 			width: '80px',
 			cooldown: Outside._QUICK,
-		}).appendTo(this.panel);
+		}).appendTo('div#pathPanel');
 		new Button.Button({
 			id: 'enterButton',
 			text: _("enter town"),
 			click: Path.enter,
 			width: '80px',
 			cooldown: Outside._QUICK,
-		}).appendTo(this.panel);
+		}).appendTo('div#pathPanel');
 		var ret = $('#returnTownButton.button');
 		var enter = $('#enterButton.button');
 		ret.show();
 		enter.show();
+		var walkButt = $('#walkSmallTownButton.button');
+		walkButt.hide();
 	},
 
 	back: function(){
 		Notifications.notify(Room,_("{0} goes back to the room. {0}’s trip temporarily ends here.",Engine.x_name));
 		var ret = $('#returnTownButton.button');
 		ret.hide();
-		//Engine.cleanUp();
+		Notifications.notify(Room,_("X goes back to the room. X’s trip temporarily ends here.",Engine.x_name));
+		Engine.travelTo(Room);
+		Engine.cleanUp();
 	},
 
 	enter: function(){
 		Notifications.notify(Path,_("X enters the small town. The unknown trip begins.",Engine.x_name));
 		var enter = $('#enterButton.button');
 		enter.hide();
-		//Engine.cleanUp();
+		Engine.cleanUp();
 	},
 
 	openPath: function() {

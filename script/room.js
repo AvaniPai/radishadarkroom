@@ -541,13 +541,7 @@ var Room = {
 			width: '80px'
 		}).appendTo('div#roomPanel');
 
-		new Button.Button({
-			id: 'exploreRoomButton',
-			text: _("go on an exploration"),
-			click: Room.explore,
-			cooldown: Outside._QUICK,
-			width: '80px'
-		}).appendTo('div#roomPanel');
+		
 
 		// Create the stores container
 		$('<div>').attr('id', 'storesContainer').prependTo('div#roomPanel');
@@ -651,12 +645,10 @@ var Room = {
 		var stoke = $('#stokeButton.button');
 		var killtime = $('#killTimeButton.button');
 		var door = $('#openDoorButton.button');
-		var explore  = $('#exploreRoomButton.button');
 		if($SM.get('game.fire.value') == Room.FireEnum.Dead.value && stoke.css('display') != 'none') {
 			stoke.hide();
 			killtime.hide();
 			door.hide();
-			explore.hide();
 			light.show();
 			if(stoke.hasClass('disabled')) {
 				Button.cooldown(light);
@@ -738,7 +730,7 @@ var Room = {
 			Notifications.notify(Room,_("{0} has lots of leisure time to spend during the night.",Engine.x_name));
 			//set up kill time
 			Room.enableKillTime();
-
+			Room._FIRST_HOT+=1;
 		}
 		window.clearTimeout(Room._fireTimer);
 		Room._fireTimer = Engine.setTimeout(Room.coolFire, Room._FIRE_COOL_DELAY);
@@ -784,6 +776,7 @@ var Room = {
 		Outside.init();
 		/*Notifications.notify(Room, _("the wind howls outside"));
 		Notifications.notify(Room, _("the wood is running out"));*/
+		Engine.travelTo(Outside);
 		Notifications.notify(Outside,_("There is not much to see around."));
 		Notifications.notify(Outside,_("There is no hint about what the new world is like. But there seems to be a small town at the horizon."));
 		Path.init();
@@ -804,8 +797,9 @@ var Room = {
 	killTime: function(){
 		var killtime = $('#killTimeButton.button');
 		Notifications.notify(Room,_("The day comes."));
+		killtime.hide();
 		Room._landTimer = Engine.setTimeout(Room.enableDoor, Room._DESERTED_LAND_DELAY);
-		killtime.hide();	
+			
 	},
 
 	enableDoor: function(){
@@ -829,17 +823,22 @@ var Room = {
 			cooldown: Outside._GATHER_DELAY,
 			width: '80px'
 		}).appendTo('div#roomPanel');
-		var prepare = $('#prepareButton.button');
-		prepare.show();
+		var prep = $('#prepareButton.button');
+		prep.show();
 		exploreButt.hide();
 	},
 
+	_prepareTime: null,
+
 	prepare: function(){
-		var prepare = $('#prepareButton.button');
-		var walk = $('#walkButton.button');
-		walk.show();
-		Outside._walk_timer = Engine.setTimeout(Outside.trigger_walk,Outside._GATHER_DELAY);
-		Engine.travelTo('Outside');
+		var walkButt = $('#walkButton.button');
+		walkButt.show();
+		Room._prepareTime = Engine.setTimeout(Room.prepareMove, Outside._GATHER_DELAY);	
+	},
+
+	prepareMove: function(){
+		Outside._walkTimer = Engine.setTimeout(Outside.trigger_walk,Outside._GATHER_DELAY);
+		Engine.travelTo(Outside);
 	},
 	
 	updateBuilderState: function() {

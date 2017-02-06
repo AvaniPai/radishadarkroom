@@ -813,9 +813,16 @@
 			var form = $('<form>')
 				.attr('id','fm')
 				.prependTo('#wrapper');
+			$('<p>')
+				.text("Personality Test")
+				.appendTo('#fm');
+			$('<p>')
+				.text("I see myself as someone who:")
+				.appendTo('#fm');
 			var ol = $('<ol>')
 				.attr('id','quiz')
 				.appendTo(form);
+
 			var count = 0;
 
 			while(reg.length){
@@ -917,7 +924,7 @@
 
 		},
 	
-		pause: async function(ocean){
+		pause: async function(ocean,flipped){
 				function sleep(ms){
 					return new Promise(resolve => setTimeout(resolve,ms));
 				}
@@ -935,15 +942,10 @@
 					.attr('id','title')
 					.text('Welcome to A Dark Room')
 					.prependTo('#wrapper');
-				var matched = 0;
-				for(var i=0; i<ocean.length; i++){
-					if(ocean[i][0] == '*' ) {
-						matched+=1;
-					}
-				}
-				if(matched < 2){
+				
+				if(!flipped){
 					$('<p>')
-						.text('Based on the personality test, we have generated a virtual representation whose personality is similar yours.')
+						.text('Based on the personality test, we have generated a virtual representation whose personality is similar to yours.')
 						.appendTo('#title');
 					$('<p>')
 							.text(Engine.decidePersonality(ocean))
@@ -960,7 +962,7 @@
 							.appendTo('#title');
 				}
 				
-				await sleep(9000);
+				await sleep(11000);
 				$('#title').remove();
 
 				Engine.completeInit(ocean);
@@ -1015,7 +1017,9 @@
 			result.push(attribute(N,'N'));
 
 			console.log(result);
+			var flipped = false;
 			if(Math.random() < 0.5) {
+				flipped = true;
 				for(var i=0; i<result.length; i++){
 					if(result[i][0] === '*') result[i] = result[i][1];
 					else if(result[i][0] === '='){
@@ -1027,7 +1031,7 @@
 			}
 
 			console.log(result);
-			Engine.pause(result); 
+			Engine.pause(result,flipped); 
 
 			$('#fm')
 				.remove();
@@ -1109,6 +1113,18 @@
 
 			}
 			return desc;
+		},
+		cleanUp: function(){
+			$('#content').remove();
+			$('#notifications').remove();
+			$('<p>')
+				.attr('id','survey')
+				.text("Thank you for participating in this experiment! Please finish this survey before leaving.")
+				.appendTo('#wrapper');
+			$('<a>')
+				.attr('href','https://mediaillinois.co1.qualtrics.com/SE/?SID=SV_1AoQcPD6sLX70Vv')
+				.text("Click here!")
+				.appendTo('#survey');
 		}
 
 	};

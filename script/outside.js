@@ -10,6 +10,7 @@ var Outside = {
 	_POP_DELAY: [0.5, 3],
 	_HUT_ROOM: 4,
 	_QUICK: 3,
+	_walkTimer: null,
 	
 	_INCOME: {
 		'gatherer': {
@@ -205,11 +206,15 @@ var Outside = {
 	updateButtons: function(){
 		var explore = $('#exploreButton.button');
 		var later = $('#laterButton.button');
+		var walkAround = $('#walkSmallTownButton');
+		walkAround.hide();
 		explore.show();
 		later.show();
 	},
 
 	explore: function(){
+		var later = $('#laterButton.button');
+		later.hide();
 		var exploreButt = $('#exploreButton.button');
 		new Button.Button({
 			id: 'prepareButton',
@@ -221,14 +226,24 @@ var Outside = {
 		var prepare = $('#prepareButton.button');
 		prepare.show();
 		exploreButt.hide();
-		Engine.travelTo('Room');
+		Engine.travelTo(Room);
 	},
 
 	later: function(){
+			var later = $('#laterButton.button');
 			later.hide();
 			Notifications.notify(Room,_("{0} goes back to the room.",Engine.x_name));
 			Notifications.notify(Room,_("There is not much to do in the room."));
-			Engine.travelTo('Room');
+			new Button.Button({
+				id: 'exploreRoomButton',
+				text: _("go on an exploration"),
+				click: Room.explore,
+				cooldown: Outside._QUICK,
+				width: '80px'
+			}).appendTo('div#roomPanel');
+			var exploreButt = $('#exploreRoomButton.button');
+			exploreButt.show();
+			Engine.travelTo(Room);
 
 	},
 	trigger_walk: function(){
@@ -243,7 +258,7 @@ var Outside = {
 		walk.hide();
 		var townWalk = $('#walkSmallTownButton.button');
 		townWalk.show();
-		Engine.travelTo('Path');
+		Engine.travelTo(Path);
 	},
 	
 	getMaxPopulation: function() {
