@@ -933,7 +933,7 @@
 
 				$('<h2>')
 					.attr('id','loading')
-					.text('Loading...')
+					.text('Calculating your personality test result...')
 					.prependTo('#wrapper');
 
 				console.log("sleeping");
@@ -947,7 +947,7 @@
 				
 				if(!Engine.flipped){
 					$('<p>')
-						.text('Based on the personality test, we have generated a virtual representation whose personality is similar to yours.')
+						.text('Based on the test, we have generated a virtual representation with a personality is similar to yours.')
 						.appendTo('#title');
 					$('<p>')
 							.text(Engine.decidePersonality(ocean))
@@ -956,7 +956,7 @@
 				} else {
 					//add class so that we can make it pretty
 						$('<p>')
-							.text('Based on the personality test, we have generated a virtual representation whose personality differs from yours.')
+							.text('Based on the personality test, we have generated a virtual representation with a personality differs from yours.')
 							.appendTo('#title');
 						//console.log("Based on the personality test, we have generated an avatar whose personality differs from yours.")
 						$('<p>')
@@ -964,7 +964,7 @@
 							.appendTo('#title');
 				}
 				
-				await sleep(13000);
+				await sleep(20000);
 				$('#title').remove();
 
 				Engine.completeInit(ocean);
