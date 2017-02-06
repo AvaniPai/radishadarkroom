@@ -924,7 +924,7 @@
 
 		},
 	
-		pause: async function(ocean,flipped){
+		pause: async function(ocean,flipped) {
 				function sleep(ms){
 					return new Promise(resolve => setTimeout(resolve,ms));
 				}
@@ -1125,7 +1125,7 @@
 				.attr('href','https://mediaillinois.co1.qualtrics.com/SE/?SID=SV_1AoQcPD6sLX70Vv')
 				.text("Click here!")
 				.appendTo('#survey');
-		}
+		},
 
 	};
 
