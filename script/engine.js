@@ -962,7 +962,7 @@
 							.appendTo('#title');
 				}
 				
-				await sleep(11000);
+				await sleep(13000);
 				$('#title').remove();
 
 				Engine.completeInit(ocean);

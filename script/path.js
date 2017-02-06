@@ -71,13 +71,14 @@ var Path = {
 		}).appendTo('div#pathPanel');
 		var ret = $('#returnTownButton.button');
 		var enter = $('#enterButton.button');
-		ret.show();
-		enter.show();
-		var walkButt = $('#walkSmallTownButton.button');
-		walkButt.hide();
+		//ret.show();
+		//enter.show();
+		
 	},
 
 	back: function(){
+		var walkButt = $('#walkSmallTownButton.button');
+		walkButt.hide();
 		Notifications.notify(Room,_("{0} goes back to the room. {0}’s trip temporarily ends here.",Engine.x_name));
 		var ret = $('#returnTownButton.button');
 		ret.hide();
@@ -87,6 +88,8 @@ var Path = {
 	},
 
 	enter: function(){
+		var walkButt = $('#walkSmallTownButton.button');
+		walkButt.hide();
 		Notifications.notify(Path,_("X enters the small town. The unknown trip begins.",Engine.x_name));
 		var enter = $('#enterButton.button');
 		enter.hide();
