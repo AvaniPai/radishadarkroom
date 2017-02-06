@@ -100,6 +100,7 @@
 			
 			//lets put quiz here (need to make personality a global somewhere)
 			var x_name='';
+			var flipped=false;
 			Engine.loadQuiz();
 			
 		},
@@ -924,7 +925,8 @@
 
 		},
 	
-		pause: async function(ocean,flipped) {
+		pause: async function(ocean) {
+
 				function sleep(ms){
 					return new Promise(resolve => setTimeout(resolve,ms));
 				}
@@ -943,7 +945,7 @@
 					.text('Welcome to A Dark Room')
 					.prependTo('#wrapper');
 				
-				if(!flipped){
+				if(!Engine.flipped){
 					$('<p>')
 						.text('Based on the personality test, we have generated a virtual representation whose personality is similar to yours.')
 						.appendTo('#title');
@@ -1017,9 +1019,8 @@
 			result.push(attribute(N,'N'));
 
 			console.log(result);
-			var flipped = false;
 			if(Math.random() < 0.5) {
-				flipped = true;
+				Engine.flipped = true;
 				for(var i=0; i<result.length; i++){
 					if(result[i][0] === '*') result[i] = result[i][1];
 					else if(result[i][0] === '='){
@@ -1031,7 +1032,7 @@
 			}
 
 			console.log(result);
-			Engine.pause(result,flipped); 
+			Engine.pause(result); 
 
 			$('#fm')
 				.remove();
@@ -1114,6 +1115,7 @@
 			}
 			return desc;
 		},
+
 		cleanUp: function(){
 			$('#content').remove();
 			$('#notifications').remove();
@@ -1121,10 +1123,17 @@
 				.attr('id','survey')
 				.text("Thank you for participating in this experiment! Please finish this survey before leaving.")
 				.appendTo('#wrapper');
-			$('<a>')
+			if(!Engine.flipped){
+				$('<a>')
 				.attr('href','https://mediaillinois.co1.qualtrics.com/SE/?SID=SV_1AoQcPD6sLX70Vv')
 				.text("Click here!")
 				.appendTo('#survey');
+			} else {
+				$('<a>')
+				.attr('href','https://mediaillinois.co1.qualtrics.com/SE/?SID=SV_cZsy69CM4vS34gJ')
+				.text("Click here!")
+				.appendTo('#survey');
+			}
 		},
 
 	};
