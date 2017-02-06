@@ -8,8 +8,8 @@ var Room = {
 	_BUILDER_STATE_DELAY: 0.5 * 60 * 1000, // time between builder state updates
 	_STOKE_COOLDOWN: 4, // cooldown to stoke the fire
 	_NEED_WOOD_DELAY: 15 * 1000, // from when the stranger shows up, to when you need wood
-	_DESERTED_LAND_DELAY: 5,
-	_FIRST_HOT: false,
+	_DESERTED_LAND_DELAY: 5 * 1000,
+	_FIRST_HOT: 0,
 	
 	buttons:{},
 	
@@ -526,7 +526,7 @@ var Room = {
 		//adding killTime button
 		new Button.Button({
 			id: 'killTimeButton',
-			text: _("kill Time"),
+			text: _("kill time"),
 			click: Room.killTime,
 			cooldown: Outside._GATHER_DELAY,
 			width: '80px'
@@ -538,6 +538,14 @@ var Room = {
 			text: _("open door"),
 			click: Room.openDoor,
 			cooldown: Outside._GATHER_DELAY,
+			width: '80px'
+		}).appendTo('div#roomPanel');
+
+		new Button.Button({
+			id: 'exploreRoomButton',
+			text: _("go on an exploration"),
+			click: Room.explore,
+			cooldown: Outside._QUICK,
 			width: '80px'
 		}).appendTo('div#roomPanel');
 
@@ -553,7 +561,7 @@ var Room = {
 		//Room.updateBuildButtons();
 		
 		Room._fireTimer = Engine.setTimeout(Room.coolFire, Room._FIRE_COOL_DELAY);
-		Room._tempTimer = Engine.setTimeout(Room.adjustTemp, Room._ROOM_WARM_DELAY);
+		//Room._tempTimer = Engine.setTimeout(Room.adjustTemp, Room._ROOM_WARM_DELAY);
 		
 		/*
 		 * Builder states:
@@ -643,10 +651,12 @@ var Room = {
 		var stoke = $('#stokeButton.button');
 		var killtime = $('#killTimeButton.button');
 		var door = $('#openDoorButton.button');
+		var explore  = $('#exploreRoomButton.button');
 		if($SM.get('game.fire.value') == Room.FireEnum.Dead.value && stoke.css('display') != 'none') {
 			stoke.hide();
 			killtime.hide();
 			door.hide();
+			explore.hide();
 			light.show();
 			if(stoke.hasClass('disabled')) {
 				Button.cooldown(light);
@@ -681,7 +691,8 @@ var Room = {
 		} else if(wood > 4) {
 			$SM.set('stores.wood', wood - 5);
 		}
-		$SM.set('game.fire', Room.FireEnum.Burning);
+		$SM.set('game.fire', Room.FireEnum.Smoldering);
+		$SM.set('game.temperature',Room.TempEnum.Cold);
 		Room.onFireChange();
 	},
 	
@@ -698,9 +709,14 @@ var Room = {
 		}
 		if($SM.get('game.fire.value') < 4) {
 			$SM.set('game.fire', Room.FireEnum.fromInt($SM.get('game.fire.value') + 1));
+			if($SM.get('game.temperature.value') < 4){
+				$SM.set('game.temperature',Room.TempEnum.fromInt($SM.get('game.temperature.value')+1));
+				if($SM.get('game.temperature.value') == 4) Room._FIRST_HOT+=1;
+			}
 		}
-		if($SM.get('game.fire.value') == 4) _FIRST_HOT = true;
+		Notifications.notify(null,_("The room is {0}",Room.TempEnum.fromInt($SM.get('game.temperature.value')).text));
 		Notifications.notify(null,_("{0} picks up a log of wood and lights it.",Engine.x_name));
+
 		Room.onFireChange();
 	},
 	
@@ -714,7 +730,7 @@ var Room = {
 			Notifications.notify(Room, _("the light from the fire spills from the windows, out into the dark"));
 			Engine.setTimeout(Room.updateBuilderState, Room._BUILDER_STATE_DELAY);
 		}*/	
-		if($SM.get('game.temperature.value') == 4 && _FIRST_HOT){
+		if($SM.get('game.temperature.value') == 4 && Room._FIRST_HOT == 1){
 			Notifications.notify(Room,_("{0} now starts to look around the room.",Engine.x_name));
 			Notifications.notify(Room,_("The room is empty."));
 			Notifications.notify(Room,_("The night was long. The time passed slowly."));
@@ -722,6 +738,7 @@ var Room = {
 			Notifications.notify(Room,_("{0} has lots of leisure time to spend during the night.",Engine.x_name));
 			//set up kill time
 			Room.enableKillTime();
+
 		}
 		window.clearTimeout(Room._fireTimer);
 		Room._fireTimer = Engine.setTimeout(Room.coolFire, Room._FIRE_COOL_DELAY);
@@ -757,6 +774,8 @@ var Room = {
 		if($SM.get('game.temperature.value') != old) {
 			Room.changed = true;
 		}
+		if($SM.get('game.temperature.value') == 4) Room._FIRST_HOT += 1;
+		
 		Room._tempTimer = Engine.setTimeout(Room.adjustTemp, Room._ROOM_WARM_DELAY);
 	},
 	
@@ -768,6 +787,7 @@ var Room = {
 		Notifications.notify(Outside,_("There is not much to see around."));
 		Notifications.notify(Outside,_("There is no hint about what the new world is like. But there seems to be a small town at the horizon."));
 		Path.init();
+		Notifications.notify(Outside,_("{0} is thinking about going on an exploration.",Engine.x_name));
 		Engine.event('progress', 'outside');
 	},
 
@@ -782,19 +802,44 @@ var Room = {
 	},
 
 	killTime: function(){
+		var killtime = $('#killTimeButton.button');
 		Notifications.notify(Room,_("The day comes."));
-		Room._landTimer = Engine.setTimeout(Room.enableDoor(), _DESERTED_LAND_DELAY);
-		window.clearTimeout(Room._landTimer);
-		
+		Room._landTimer = Engine.setTimeout(Room.enableDoor, Room._DESERTED_LAND_DELAY);
+		killtime.hide();	
 	},
 
 	enableDoor: function(){
 		var door = $('#openDoorButton.button');
 		door.show();
+		window.clearTimeout(Room._landTimer);
 	},
 
 	openDoor: function(){
 		Room.unlockForest();
+		var door = $('#openDoorButton.button');
+		door.hide();
+	},
+
+	explore: function(){
+		var exploreButt = $('#exploreRoomButton.button');
+		new Button.Button({
+			id: 'prepareButton',
+			text: _("prepare for trip"),
+			click: Room.prepare,
+			cooldown: Outside._GATHER_DELAY,
+			width: '80px'
+		}).appendTo('div#roomPanel');
+		var prepare = $('#prepareButton.button');
+		prepare.show();
+		exploreButt.hide();
+	},
+
+	prepare: function(){
+		var prepare = $('#prepareButton.button');
+		var walk = $('#walkButton.button');
+		walk.show();
+		Outside._walk_timer = Engine.setTimeout(Outside.trigger_walk,Outside._GATHER_DELAY);
+		Engine.travelTo('Outside');
 	},
 	
 	updateBuilderState: function() {

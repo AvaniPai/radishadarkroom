@@ -5,10 +5,11 @@ var Outside = {
 	name: _("Outside"),
 	
 	_STORES_OFFSET: 0,
-	_GATHER_DELAY: 60,
+	_GATHER_DELAY: 10,
 	_TRAPS_DELAY: 90,
 	_POP_DELAY: [0.5, 3],
 	_HUT_ROOM: 4,
+	_QUICK: 3,
 	
 	_INCOME: {
 		'gatherer': {
@@ -157,10 +158,10 @@ var Outside = {
 			if(!$SM.get('game.workers')) $SM.set('game.workers', {});
 		}
 		
-		this.updateVillage();
+		/*this.updateVillage();
 		Outside.updateWorkersView();
-		Outside.updateVillageIncome();
-		
+		Outside.updateVillageIncome();*/
+		this.setTitle();
 		Engine.updateSlider();
 		
 		// Create the gather button
@@ -172,8 +173,77 @@ var Outside = {
 			width: '80px'
 		}).appendTo('div#outsidePanel');*/
 
-		Outside.updateTrapButton();
-		
+		new Button.Button({
+			id: 'exploreButton',
+			text: _("go on an exploration"),
+			click: Outside.explore,
+			cooldown: Outside._QUICK,
+			width: '80px'
+		}).appendTo('div#outsidePanel');
+
+		new Button.Button({
+			id: 'laterButton',
+			text: _("later"),
+			click: Outside.later,
+			cooldown: Outside._QUICK,
+			width: '80px'
+		}).appendTo('div#outsidePanel');
+
+		new Button.Button({
+			id: 'walkSmallTownButton',
+			text: _("walk around town"),
+			click: Outside.walk,
+			width: '80px',
+			cooldown: Outside._GATHER_DELAY,
+		}).appendTo(this.panel);
+
+		Outside.updateButtons();
+		//Outside.updateTrapButton();
+
+	},
+
+	updateButtons: function(){
+		var explore = $('#exploreButton.button');
+		var later = $('#laterButton.button');
+		explore.show();
+		later.show();
+	},
+
+	explore: function(){
+		var exploreButt = $('#exploreButton.button');
+		new Button.Button({
+			id: 'prepareButton',
+			text: _("prepare for trip"),
+			click: Room.prepare,
+			cooldown: Outside._GATHER_DELAY,
+			width: '80px'
+		}).appendTo('div#roomPanel');
+		var prepare = $('#prepareButton.button');
+		prepare.show();
+		exploreButt.hide();
+		Engine.travelTo('Room');
+	},
+
+	later: function(){
+			later.hide();
+			Notifications.notify(Room,_("{0} goes back to the room.",Engine.x_name));
+			Notifications.notify(Room,_("There is not much to do in the room."));
+			Engine.travelTo('Room');
+
+	},
+	trigger_walk: function(){
+		var prepare = $('#prepareButton.button');
+		prepare.hide();
+		Outside.walk();
+	},
+
+	walk: function(){
+		Notifications.notify(Outside,_("After walking for an hour, {0} finds a small town lays ahead.",Engine.x_name));
+		var walk = $('#walkButton.button');
+		walk.hide();
+		var townWalk = $('#walkSmallTownButton.button');
+		townWalk.show();
+		Engine.travelTo('Path');
 	},
 	
 	getMaxPopulation: function() {

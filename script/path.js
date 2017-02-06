@@ -23,7 +23,7 @@ var Path = {
 		);
 		
 		// Init the World
-		World.init();
+		//World.init();
 		
 		// Create the path tab
 		this.tab = Header.addLocation(_("A Small Town"), "path", Path);
@@ -39,11 +39,11 @@ var Path = {
 		
 		// Add the embark button
 		new Button.Button({
-			id: 'embarkButton',
-			text: _("embark"),
-			click: Path.embark,
+			id: 'walkSmallTownButton',
+			text: _("walk around the perimeter of the small town"),
+			click: Path.walk,
 			width: '80px',
-			cooldown: World.DEATH_COOLDOWN
+			cooldown: Outside._GATHER_DELAY,
 		}).appendTo(this.panel);
 		
 		Path.outfit = $SM.get('outfit');
@@ -53,7 +53,42 @@ var Path = {
 		//subscribe to stateUpdates
 		$.Dispatch('stateUpdate').subscribe(Path.handleStateUpdates);
 	},
-	
+	walk: function(){
+		Notifications.notify(Path,_("{0} faces the decision of going back to the room or entering the small town.",Engine.x_name));
+		new Button.Button({
+			id: 'returnTownButton',
+			text: _("go back"),
+			click: Path.back,
+			width: '80px',
+			cooldown: Outside._QUICK,
+		}).appendTo(this.panel);
+		new Button.Button({
+			id: 'enterButton',
+			text: _("enter town"),
+			click: Path.enter,
+			width: '80px',
+			cooldown: Outside._QUICK,
+		}).appendTo(this.panel);
+		var ret = $('#returnTownButton.button');
+		var enter = $('#enterButton.button');
+		ret.show();
+		enter.show();
+	},
+
+	back: function(){
+		Notifications.notify(Room,_("{0} goes back to the room. {0}’s trip temporarily ends here.",Engine.x_name));
+		var ret = $('#returnTownButton.button');
+		ret.hide();
+		//Engine.cleanUp();
+	},
+
+	enter: function(){
+		Notifications.notify(Path,_("X enters the small town. The unknown trip begins.",Engine.x_name));
+		var enter = $('#enterButton.button');
+		enter.hide();
+		//Engine.cleanUp();
+	},
+
 	openPath: function() {
 		Path.init();
 		Engine.event('progress', 'path');

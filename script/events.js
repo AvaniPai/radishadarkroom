@@ -27,13 +27,13 @@ var Events = {
 
 		Events.eventStack = [];
 
-		Events.scheduleNextEvent();
+		//Events.scheduleNextEvent();
 
 		//subscribe to stateUpdates
 		$.Dispatch('stateUpdate').subscribe(Events.handleStateUpdates);
 
 		//check for stored delayed events
-		Events.initDelay();
+		//Events.initDelay();
 	},
 
 	options: {}, // Nothing for now
