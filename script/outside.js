@@ -140,7 +140,7 @@ var Outside = {
 		}
 		
 		// Create the outside tab
-		this.tab = Header.addLocation(_("A Silent Forest"), "outside", Outside);
+		this.tab = Header.addLocation(_("A Deserted Land"), "outside", Outside);
 		
 		// Create the Outside panel
 		this.panel = $('<div>').attr('id', "outsidePanel")
@@ -164,15 +164,16 @@ var Outside = {
 		Engine.updateSlider();
 		
 		// Create the gather button
-		new Button.Button({
+		/*new Button.Button({
 			id: 'gatherButton',
 			text: _("gather wood"),
 			click: Outside.gatherWood,
 			cooldown: Outside._GATHER_DELAY,
 			width: '80px'
-		}).appendTo('div#outsidePanel');
+		}).appendTo('div#outsidePanel');*/
 
 		Outside.updateTrapButton();
+		
 	},
 	
 	getMaxPopulation: function() {
@@ -559,7 +560,7 @@ var Outside = {
 		var numHuts = $SM.get('game.buildings["hut"]', true);
 		var title;
 		if(numHuts === 0) {
-			title = _("A Silent Forest");
+			title = _("A Deserted Land");
 		} else if(numHuts == 1) {
 			title = _("A Lonely Hut");
 		} else if(numHuts <= 4) {
@@ -581,7 +582,7 @@ var Outside = {
 	onArrival: function(transition_diff) {
 		Outside.setTitle();
 		if(!$SM.get('game.outside.seenForest')) {
-			Notifications.notify(Outside, _("the sky is grey and the wind blows relentlessly"));
+			//Notifications.notify(Outside, _("the sky is grey and the wind blows relentlessly"));
 			$SM.set('game.outside.seenForest', true);
 		}
 		Outside.updateTrapButton();
@@ -595,7 +596,7 @@ var Outside = {
 		var gatherAmt = $SM.get('game.buildings["cart"]', true) > 0 ? 50 : 10;
 		$SM.add('stores.wood', gatherAmt);
 	},
-	
+
 	checkTraps: function() {
 		var drops = {};
 		var msg = [];

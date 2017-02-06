@@ -26,7 +26,7 @@ var Path = {
 		World.init();
 		
 		// Create the path tab
-		this.tab = Header.addLocation(_("A Dusty Path"), "path", Path);
+		this.tab = Header.addLocation(_("A Small Town"), "path", Path);
 		
 		// Create the Path panel
 		this.panel = $('<div>').attr('id', "pathPanel")

@@ -935,22 +935,13 @@
 					.attr('id','title')
 					.text('Welcome to A Dark Room')
 					.prependTo('#wrapper');
-				var matched = true;
+				var matched = 0;
 				for(var i=0; i<ocean.length; i++){
 					if(ocean[i][0] == '*' ) {
-						matched = false;
-						//add class so that we can make it pretty
-						$('<p>')
-							.text('Based on the personality test, we have generated a virtual representation whose personality differs from yours.')
-							.appendTo('#title');
-						//console.log("Based on the personality test, we have generated an avatar whose personality differs from yours.")
-						$('<p>')
-							.text(Engine.decidePersonality(ocean))
-							.appendTo('#title');
-						break;
+						matched+=1;
 					}
 				}
-				if(matched){
+				if(matched < 2){
 					$('<p>')
 						.text('Based on the personality test, we have generated a virtual representation whose personality is similar yours.')
 						.appendTo('#title');
@@ -958,6 +949,15 @@
 							.text(Engine.decidePersonality(ocean))
 							.appendTo('#title');
 					//console.log('Based on the personality test, we have generated an avator whose personality is similar yours.')
+				} else {
+					//add class so that we can make it pretty
+						$('<p>')
+							.text('Based on the personality test, we have generated a virtual representation whose personality differs from yours.')
+							.appendTo('#title');
+						//console.log("Based on the personality test, we have generated an avatar whose personality differs from yours.")
+						$('<p>')
+							.text(Engine.decidePersonality(ocean))
+							.appendTo('#title');
 				}
 				
 				await sleep(9000);
@@ -968,19 +968,14 @@
 		},
 			
 		score: function(){
+			//clear is pure, * is anti, half chance of flipping their received config. 
+			//pure is assigned on whether they score > 6 on a trait
+			//star is assigned on whether they score < 6 on a trait
 			function attribute(scores, letter){
-				console.log("scores {0}, letter {1}", scores, letter);
-				if(scores[0]+scores[1] != 6){
-					if(Math.random() < 0.5) return letter;
-					else {
-						return '*'+letter;
-					} 
-				}
-				if(Math.random() < 0.5){
-					console.log("equals six!")
-					if(Math.random() < 0.5) return letter;
-					return '*'+letter;
-				} 
+				console.log(_("scores {0}, letter {1}", scores, letter));
+				console.log(scores[0]+scores[1]);
+				if((scores[0]+scores[1]) > 6) return letter;
+				else if((scores[0]+scores[1]) < 6) return '*'+letter;
 				return '='+letter;
 			}
 
@@ -991,22 +986,22 @@
 			var N = [];
 			for(var i=1; i<11; i++){
 				var data = $('input[name=q'+i.toString()+']:checked').val();
-				console.log(data);
+				//console.log(data);
 				switch(data[0]){
 					case 'O':
-						O.push(data[1]);
+						O.push(Number(data[1]));
 						break;
 					case 'C':
-						C.push(data[1]);
+						C.push(Number(data[1]));
 						break;
 					case 'E':
-						E.push(data[1]);
+						E.push(Number(data[1]));
 						break;
 					case 'A':
-						A.push(data[1]);
+						A.push(Number(data[1]));
 						break;
 					case 'N':
-						N.push(data[1]);
+						N.push(Number(data[1]));
 						break;
 					default:
 						break;
@@ -1020,12 +1015,24 @@
 			result.push(attribute(N,'N'));
 
 			console.log(result);
+			if(Math.random() < 0.5) {
+				for(var i=0; i<result.length; i++){
+					if(result[i][0] === '*') result[i] = result[i][1];
+					else if(result[i][0] === '='){
+						if(Math.random() < 0.5) result[i] = '*'+result[i][1];
+						else { result[i] = result[i][1];}
+					}
+					else{ result[i] = '*'+result[i]; }
+				}
+			}
+
+			console.log(result);
 			Engine.pause(result); 
 
 			$('#fm')
 				.remove();
 
-			},
+		},
 
 		decidePersonality: function(ocean){
 			var desc = "";
