@@ -66,6 +66,13 @@ var Notifications = {
 			// Do this every time we add a new message, this way we never have a large backlog to iterate through. Keeps things faster.
 			Notifications.clearHidden();
 		});
+
+		/*var currMess = $('div#notifyCurr');
+		if( typeof currMess == 'undefined'){
+			curr.addClass('notification').css('opacity','0').text(t).prependTo('div#notifications');
+		} else {
+			currMess.text(t);
+		}*/
 	},
 	
 	printQueue: function(module) {

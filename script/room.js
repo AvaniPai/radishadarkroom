@@ -9,6 +9,7 @@ var Room = {
 	_STOKE_COOLDOWN: 4, // cooldown to stoke the fire
 	_NEED_WOOD_DELAY: 15 * 1000, // from when the stranger shows up, to when you need wood
 	_DESERTED_LAND_DELAY: 5 * 1000,
+	_GATHER_DELAY: 7,
 	_FIRST_HOT: 0,
 	
 	buttons:{},
@@ -519,7 +520,7 @@ var Room = {
 			id: 'gatherButton',
 			text: _("gather wood"),
 			click: Outside.gatherWood,
-			cooldown: Outside._GATHER_DELAY,
+			cooldown: Room._GATHER_DELAY,
 			width: '80px'
 		}).appendTo('div#roomPanel');
 
@@ -528,7 +529,7 @@ var Room = {
 			id: 'killTimeButton',
 			text: _("kill time"),
 			click: Room.killTime,
-			cooldown: Outside._GATHER_DELAY,
+			cooldown: Room._GATHER_DELAY,
 			width: '80px'
 		}).appendTo('div#roomPanel');
 		
@@ -536,12 +537,26 @@ var Room = {
 		new Button.Button({
 			id: 'openDoorButton',
 			text: _("open door"),
-			click: Room.openDoor,
-			cooldown: Outside._GATHER_DELAY,
+			click: Room.unlockForest,
+			cooldown: Room._GATHER_DELAY,
 			width: '80px'
 		}).appendTo('div#roomPanel');
 
-		
+		new Button.Button({
+				id: 'exploreRoomButton',
+				text: _("go on an exploration"),
+				click: Room.explore,
+				cooldown: Outside._QUICK,
+				width: '80px'
+			}).appendTo('div#roomPanel');
+
+		new Button.Button({
+			id: 'prepareButton',
+			text: _("prepare for trip"),
+			click: Room.prepare,
+			cooldown: Room._GATHER_DELAY,
+			width: '80px'
+		}).appendTo('div#roomPanel');
 
 		// Create the stores container
 		$('<div>').attr('id', 'storesContainer').prependTo('div#roomPanel');
@@ -645,11 +660,15 @@ var Room = {
 		var stoke = $('#stokeButton.button');
 		var killtime = $('#killTimeButton.button');
 		var door = $('#openDoorButton.button');
+		var exRoom = $('#exploreRoomButton.button');
+		var prep = $('#prepareButton.button');
 		if($SM.get('game.fire.value') == Room.FireEnum.Dead.value && stoke.css('display') != 'none') {
 			stoke.hide();
 			killtime.hide();
 			door.hide();
 			light.show();
+			exRoom.hide();
+			prep.hide();
 			if(stoke.hasClass('disabled')) {
 				Button.cooldown(light);
 			}
@@ -673,6 +692,7 @@ var Room = {
 	_fireTimer: null,
 	_tempTimer: null,
 	_landTimer: null,
+	_prepTimer: null,
 	lightFire: function() {
 		var wood = $SM.get('stores.wood');
 		if(wood < 5) {
@@ -684,7 +704,7 @@ var Room = {
 			$SM.set('stores.wood', wood - 5);
 		}
 		$SM.set('game.fire', Room.FireEnum.Smoldering);
-		$SM.set('game.temperature',Room.TempEnum.Cold);
+		$SM.set('game.temperature',Room.TempEnum.Mild);
 		Room.onFireChange();
 	},
 	
@@ -706,8 +726,8 @@ var Room = {
 				if($SM.get('game.temperature.value') == 4) Room._FIRST_HOT+=1;
 			}
 		}
-		Notifications.notify(null,_("The room is {0}",Room.TempEnum.fromInt($SM.get('game.temperature.value')).text));
-		Notifications.notify(null,_("{0} picks up a log of wood and lights it.",Engine.x_name));
+		Notifications.notify(null,_("The room is {0}",Room.TempEnum.fromInt($SM.get('game.temperature.value')).text),true);
+		Notifications.notify(null,_("{0} picks up a log of wood and lights it.",Engine.x_name),true);
 
 		Room.onFireChange();
 	},
@@ -723,11 +743,11 @@ var Room = {
 			Engine.setTimeout(Room.updateBuilderState, Room._BUILDER_STATE_DELAY);
 		}*/	
 		if($SM.get('game.temperature.value') == 4 && Room._FIRST_HOT == 1){
-			Notifications.notify(Room,_("{0} now starts to look around the room.",Engine.x_name));
-			Notifications.notify(Room,_("The room is empty."));
-			Notifications.notify(Room,_("The night was long. The time passed slowly."));
-			Notifications.notify(Room,_("{0} decides to explore the world in the morning.",Engine.x_name));
-			Notifications.notify(Room,_("{0} has lots of leisure time to spend during the night.",Engine.x_name));
+			Notifications.notify(Room,_("{0} now starts to look around the room.",Engine.x_name),true);
+			Notifications.notify(Room,_("The room is empty."),true);
+			Notifications.notify(Room,_("The night was long. The time passed slowly."),true);
+			Notifications.notify(Room,_("{0} decides to explore the world in the morning.",Engine.x_name),true);
+			Notifications.notify(Room,_("{0} has lots of leisure time to spend during the night.",Engine.x_name),true);
 			//set up kill time
 			Room.enableKillTime();
 			Room._FIRST_HOT+=1;
@@ -773,6 +793,9 @@ var Room = {
 	
 	unlockForest: function() {
 		$SM.set('stores.wood', 4);
+		var door = $('#openDoorButton.button');
+		//remove door?
+		door.hide();
 		Outside.init();
 		/*Notifications.notify(Room, _("the wind howls outside"));
 		Notifications.notify(Room, _("the wood is running out"));*/
@@ -795,49 +818,35 @@ var Room = {
 	},
 
 	killTime: function(){
-		var killtime = $('#killTimeButton.button');
 		Notifications.notify(Room,_("The day comes."));
-		killtime.hide();
 		Room._landTimer = Engine.setTimeout(Room.enableDoor, Room._DESERTED_LAND_DELAY);
 			
 	},
 
 	enableDoor: function(){
+		var kt = $('#killTimeButton.button');
+		//remove kt?
+		kt.hide();
 		var door = $('#openDoorButton.button');
 		door.show();
 		window.clearTimeout(Room._landTimer);
 	},
 
-	openDoor: function(){
-		Room.unlockForest();
-		var door = $('#openDoorButton.button');
-		door.hide();
-	},
-
 	explore: function(){
-		var exploreButt = $('#exploreRoomButton.button');
-		new Button.Button({
-			id: 'prepareButton',
-			text: _("prepare for trip"),
-			click: Room.prepare,
-			cooldown: Outside._GATHER_DELAY,
-			width: '80px'
-		}).appendTo('div#roomPanel');
 		var prep = $('#prepareButton.button');
 		prep.show();
+		var exploreButt = $('#exploreRoomButton.button');
 		exploreButt.hide();
 	},
 
-	_prepareTime: null,
 
 	prepare: function(){
-		var walkButt = $('#walkButton.button');
-		walkButt.show();
-		Room._prepareTime = Engine.setTimeout(Room.prepareMove, Outside._GATHER_DELAY);	
+		Room._prepTimer = Engine.setTimeout(Room.prepareMove, Room._GATHER_DELAY * 1000);	
 	},
 
 	prepareMove: function(){
-		Outside._walkTimer = Engine.setTimeout(Outside.trigger_walk,Outside._GATHER_DELAY);
+		var walkTo = $('#walkTowardButton.button');
+		walkTo.show();
 		Engine.travelTo(Outside);
 	},
 	

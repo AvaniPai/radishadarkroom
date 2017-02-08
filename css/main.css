@@ -196,13 +196,13 @@ div#notifications {
 	position: absolute;
 	top: 20px;
 	left: 0px;
-	height: 700px;
+	height: 350px;
 	width: 200px;
 	overflow: hidden;
 }
 
 div#notifications div.notification {
-	margin-bottom: 10px;
+	margin-bottom: 20px;
 }
 
 div#notifyGradient {
@@ -219,7 +219,7 @@ div#notifyGradient {
 		rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 100%
 	);
 	filter: alpha(
-		Opacity=0, FinishOpacity=100, Style=1, StartX=0, StartY=0, FinishX=0, FinishY=500
+		Opacity=0, FinishOpacity=100, Style=1, StartX=0, StartY=0, FinishX=0, FinishY=250
 	);
 }
 
@@ -603,4 +603,18 @@ body.noMask #description {
 }
 ul.scale {
 	list-style-type: none;
+}
+p#loading {
+	font-family: "Times New Roman", Times, serif;
+	font-size: 16px;
+	font-weight: normal;
+	line-height: normal;
+	letter-spacing: normal;
+}
+p.persText {
+	font-family: "Times New Roman", Times, serif;
+	font-size: 16px;
+	font-weight: normal;
+	line-height: normal;
+	letter-spacing: normal;
 }

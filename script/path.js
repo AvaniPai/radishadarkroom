@@ -46,34 +46,47 @@ var Path = {
 			cooldown: Outside._GATHER_DELAY,
 		}).appendTo('div#pathPanel');
 		
-		//Path.outfit = $SM.get('outfit');
-		
-		Engine.updateSlider();
-		
-		//subscribe to stateUpdates
-		$.Dispatch('stateUpdate').subscribe(Path.handleStateUpdates);
-	},
-	walk: function(){
-		Notifications.notify(Path,_("{0} faces the decision of going back to the room or entering the small town.",Engine.x_name));
 		new Button.Button({
-			id: 'returnTownButton',
+			id: 'returnButton',
 			text: _("go back"),
 			click: Path.back,
 			width: '80px',
-			cooldown: Outside._QUICK,
+			cooldown: Outside._GATHER_DELAY,
 		}).appendTo('div#pathPanel');
+
 		new Button.Button({
 			id: 'enterButton',
-			text: _("enter town"),
+			text: _("enter the town"),
 			click: Path.enter,
 			width: '80px',
-			cooldown: Outside._QUICK,
+			cooldown: Outside._GATHER_DELAY,
 		}).appendTo('div#pathPanel');
-		var ret = $('#returnTownButton.button');
-		var enter = $('#enterButton.button');
-		//ret.show();
-		//enter.show();
+
+		Path.outfit = $SM.get('outfit');
 		
+		Engine.updateSlider();
+		Path.updateButtons();
+		//subscribe to stateUpdates
+		$.Dispatch('stateUpdate').subscribe(Path.handleStateUpdates);
+	},
+
+	updateButtons: function(){
+		var walkTown = $('#walkSmallTownButton.button');
+		var ret = $('#returnButton.button');
+		var enter = $('#enterButton.button');
+		walkTown.show();
+		ret.hide();
+		enter.hide();
+	},
+
+	walk: function(){
+		Notifications.notify(Path,_("{0} faces the decision of going back to the room or entering the small town.",Engine.x_name));
+		var ret = $('#returnButton.button');
+		var enter = $('#enterButton.button');
+		ret.show();
+		enter.show();
+		var walkTown = $('#walkSmallTownButton.button');
+		Button.setDisabled(walkTown,true);
 	},
 
 	back: function(){
@@ -88,8 +101,8 @@ var Path = {
 	},
 
 	enter: function(){
-		var walkButt = $('#walkSmallTownButton.button');
-		walkButt.hide();
+		var walkTown = $('#walkSmallTownButton.button');
+		walkTown.hide();
 		Notifications.notify(Path,_("X enters the small town. The unknown trip begins.",Engine.x_name));
 		var enter = $('#enterButton.button');
 		enter.hide();

@@ -101,6 +101,7 @@
 			//lets put quiz here (need to make personality a global somewhere)
 			var x_name='';
 			var flipped=false;
+			var res = [];
 			Engine.loadQuiz();
 			
 		},
@@ -829,6 +830,7 @@
 			while(reg.length){
 				var pos = Math.floor((Math.random()*reg.length));
 				count+=1;
+				//2d array for q order, response
 				var rev = reg[pos][0] === '*'; //legal?
 				if(rev) reg[pos] = reg[pos].slice(1,reg[pos].length);
 				var type = reg[pos][0];
@@ -931,7 +933,7 @@
 					return new Promise(resolve => setTimeout(resolve,ms));
 				}
 
-				$('<h2>')
+				$('<p>')
 					.attr('id','loading')
 					.text('Calculating your personality test result...')
 					.prependTo('#wrapper');
@@ -940,34 +942,45 @@
 				await sleep(2000);
 				console.log("awake");
 				$('#loading').remove();
-				$('<h1>')
+				$('<p>')
 					.attr('id','title')
+					.addClass('persText')
 					.text('Welcome to A Dark Room')
 					.prependTo('#wrapper');
 				
 				if(!Engine.flipped){
 					$('<p>')
+						.addClass('persText')
 						.text('Based on the test, we have generated a virtual representation with a personality is similar to yours.')
 						.appendTo('#title');
 					$('<p>')
-							.text(Engine.decidePersonality(ocean))
-							.appendTo('#title');
-					//console.log('Based on the personality test, we have generated an avator whose personality is similar yours.')
+						.addClass('persText')
+						.text(Engine.decidePersonality(ocean))
+						.appendTo('#title');
 				} else {
 					//add class so that we can make it pretty
 						$('<p>')
+							.addClass('persText')
 							.text('Based on the personality test, we have generated a virtual representation with a personality differs from yours.')
 							.appendTo('#title');
-						//console.log("Based on the personality test, we have generated an avatar whose personality differs from yours.")
 						$('<p>')
+							.addClass('persText')
 							.text(Engine.decidePersonality(ocean))
 							.appendTo('#title');
 				}
-				
-				await sleep(20000);
-				$('#title').remove();
 
-				Engine.completeInit(ocean);
+
+				$('<input>')
+					.attr('type','button')
+					.attr('onclick','Engine.ready()')
+					.attr('value','Ready to proceed!')
+					.appendTo('#title');
+				
+		},
+
+		ready: function(){
+				$('#title').remove();
+				Engine.completeInit(Engine.res);
 				
 		},
 			
@@ -1011,28 +1024,30 @@
 						break;
 				}
 			}
-			var result = [];
-			result.push(attribute(O,'O'));
-			result.push(attribute(C,'C'));
-			result.push(attribute(E,'E'));
-			result.push(attribute(A,'A'));
-			result.push(attribute(N,'N'));
+			var ocean = [];
+			ocean.push(attribute(O,'O'));
+			ocean.push(attribute(C,'C'));
+			ocean.push(attribute(E,'E'));
+			ocean.push(attribute(A,'A'));
+			ocean.push(attribute(N,'N'));
 
-			console.log(result);
+			console.log(ocean);
 			if(Math.random() < 0.5) {
 				Engine.flipped = true;
-				for(var i=0; i<result.length; i++){
-					if(result[i][0] === '*') result[i] = result[i][1];
-					else if(result[i][0] === '='){
-						if(Math.random() < 0.5) result[i] = '*'+result[i][1];
-						else { result[i] = result[i][1];}
+				for(var i=0; i<ocean.length; i++){
+					if(ocean[i][0] === '*') ocean[i] = ocean[i][1];
+					else if(ocean[i][0] === '='){
+						if(Math.random() < 0.5) ocean[i] = '*'+ocean[i][1];
+						else { ocean[i] = ocean[i][1];}
 					}
-					else{ result[i] = '*'+result[i]; }
+					else{ ocean[i] = '*'+ocean[i]; }
 				}
 			}
 
-			console.log(result);
-			Engine.pause(result); 
+			Engine.res = ocean;
+
+			console.log(ocean);
+			Engine.pause(ocean); 
 
 			$('#fm')
 				.remove();

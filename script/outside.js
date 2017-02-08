@@ -10,7 +10,6 @@ var Outside = {
 	_POP_DELAY: [0.5, 3],
 	_HUT_ROOM: 4,
 	_QUICK: 3,
-	_walkTimer: null,
 	
 	_INCOME: {
 		'gatherer': {
@@ -175,7 +174,7 @@ var Outside = {
 		}).appendTo('div#outsidePanel');*/
 
 		new Button.Button({
-			id: 'exploreButton',
+			id: 'exploreOutsideButton',
 			text: _("go on an exploration"),
 			click: Outside.explore,
 			cooldown: Outside._QUICK,
@@ -191,12 +190,14 @@ var Outside = {
 		}).appendTo('div#outsidePanel');
 
 		new Button.Button({
-			id: 'walkSmallTownButton',
+			id: 'walkTowardButton',
 			text: _("walk towards town"),
 			click: Outside.walk,
 			width: '80px',
 			cooldown: Outside._GATHER_DELAY,
-		}).appendTo(this.panel);
+		}).appendTo('div#outsidePanel');
+
+			
 
 		Outside.updateButtons();
 		//Outside.updateTrapButton();
@@ -204,62 +205,47 @@ var Outside = {
 	},
 
 	updateButtons: function(){
-		var explore = $('#exploreButton.button');
+		var exOut = $('#exploreOutsideButton.button');
 		var later = $('#laterButton.button');
-		var walkAround = $('#walkSmallTownButton');
-		walkAround.hide();
-		explore.show();
+		var walkTo = $('#walkTowardButton.button');
+		walkTo.hide();
+		exOut.show();
 		later.show();
 	},
 
 	explore: function(){
 		var later = $('#laterButton.button');
-		later.hide();
-		var exploreButt = $('#exploreButton.button');
-		new Button.Button({
-			id: 'prepareButton',
-			text: _("prepare for trip"),
-			click: Room.prepare,
-			cooldown: Outside._GATHER_DELAY,
-			width: '80px'
-		}).appendTo('div#roomPanel');
-		var prepare = $('#prepareButton.button');
-		prepare.show();
-		exploreButt.hide();
+		Button.setDisabled(later,true);
+		var exOut = $('#exploreOutsideButton.button');
+		//exOut.hide();
+		Button.setDisabled(exOut,true);
+		var exRoom = $('#exploreRoomButton.button');
+		//exRoom.hide();
+		Button.setDisabled(exRoom,true);
+		var prep = $('#prepareButton.button');
+		prep.show();
 		Engine.travelTo(Room);
 	},
 
 	later: function(){
-			var later = $('#laterButton.button');
-			later.hide();
-			var exploreB = $('#exploreButton.button');
-			exploreB.hide();
-			Notifications.notify(Room,_("{0} goes back to the room.",Engine.x_name));
-			Notifications.notify(Room,_("There is not much to do in the room."));
-			new Button.Button({
-				id: 'exploreRoomButton',
-				text: _("go on an exploration"),
-				click: Room.explore,
-				cooldown: Outside._QUICK,
-				width: '80px'
-			}).appendTo('div#roomPanel');
-			var exploreButt = $('#exploreRoomButton.button');
-			exploreButt.show();
-			Engine.travelTo(Room);
+		var later = $('#laterButton.button');
+		Button.setDisabled(later,true);
+		//remove exploreOutside completely
+		var exOut = $('#exploreOutsideButton.button');
+		Button.setDisabled(exOut,true);
+		var exRoom = $('#exploreRoomButton.button');
+		exRoom.show();
+		Notifications.notify(Room,_("{0} goes back to the room.",Engine.x_name));
+		Notifications.notify(Room,_("There is not much to do in the room."));
+		
+		Engine.travelTo(Room);
 
-	},
-	trigger_walk: function(){
-		var prepare = $('#prepareButton.button');
-		prepare.hide();
-		Outside.walk();
 	},
 
 	walk: function(){
 		Notifications.notify(Outside,_("After walking for an hour, {0} finds a small town lays ahead.",Engine.x_name));
-		var walk = $('#walkButton.button');
-		walk.hide();
-		var townWalk = $('#walkSmallTownButton.button');
-		townWalk.show();
+		var walkTo = $('#walkTowardButton.button');
+		Button.setDisabled(walkTo,true);
 		Engine.travelTo(Path);
 	},
 	
