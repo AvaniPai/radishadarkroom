@@ -523,40 +523,97 @@ var Room = {
 			cooldown: Room._GATHER_DELAY,
 			width: '80px'
 		}).appendTo('div#roomPanel');
-
-		//adding killTime button
-		new Button.Button({
-			id: 'killTimeButton',
-			text: _("kill time"),
-			click: Room.killTime,
-			cooldown: Room._GATHER_DELAY,
-			width: '80px'
-		}).appendTo('div#roomPanel');
 		
 		//adding openDoor button
 		new Button.Button({
 			id: 'openDoorButton',
 			text: _("open door"),
-			click: Room.unlockForest,
+			click: Room.openDoor,
 			cooldown: Room._GATHER_DELAY,
 			width: '80px'
 		}).appendTo('div#roomPanel');
 
 		new Button.Button({
-				id: 'exploreRoomButton',
-				text: _("go on an exploration"),
-				click: Room.explore,
-				cooldown: Outside._QUICK,
-				width: '80px'
-			}).appendTo('div#roomPanel');
-
-		new Button.Button({
-			id: 'prepareButton',
-			text: _("prepare for trip"),
-			click: Room.prepare,
-			cooldown: Room._GATHER_DELAY,
+			id: 'lookButton',
+			text: _("look around"),
+			click: Room.lookAround,
+			cooldown: 2,
 			width: '80px'
 		}).appendTo('div#roomPanel');
+
+		new Button.Button({
+			id: 'walkRoomButton',
+			text: _("walk around the room"),
+			click: Room.walkAround,
+			cooldown: 3,
+			width: '80px'
+		}).appendTo('div#roomPanel');
+
+		new Button.Button({
+			id: 'walkCornerButton',
+			text: _("walk to the corner"),
+			click: Room.walkCorner,
+			cooldown: 2,
+			width: '80px'
+		}).appendTo('div#roomPanel');
+
+		new Button.Button({
+			id: 'paintingButton',
+			text: _("pick up painting"),
+			click: Room.pickupPainting,
+			width: '80px'
+		}).appendTo('div#roomPanel');
+
+		new Button.Button({
+			id: 'papyrusButton',
+			text: _("pick up papyrus"),
+			click: Room.pickupPapyrus,
+			width: '80px'
+		}).appendTo('div#roomPanel');
+
+		new Button.Button({
+			id: 'notebookButton',
+			text: _("pick up notebook"),
+			click: Room.pickupNotebook,
+			width: '80px'
+		}).appendTo('div#roomPanel');
+
+		new Button.Button({
+			id: 'blowDustButton',
+			text: _("blow away dust"),
+			click: Room.blowDust,
+			width: '80px'
+		}).appendTo('div#roomPanel');
+
+		new Button.Button({
+			id: 'studyButton',
+			text: _("study the symbols"),
+			click: Room.studySymbols,
+			width: '80px'
+		}).appendTo('div#roomPanel');
+
+		new Button.Button({
+			id: 'diaryButton',
+			text: _("ready the diary"),
+			click: Room.readDiary,
+			width: '80px'
+		}).appendTo('div#roomPanel');
+
+		new Button.Button({
+			id: 'windowButton',
+			text: _("move toward window"),
+			click: Room.moveWindow,
+			width: '80px'
+		}).appendTo('div#roomPanel');
+
+		new Button.Button({
+			id: 'sitButton',
+			text: _("sit back"),
+			click: Room.sitBack,
+			cooldown: 3,
+			width: '80px'
+		}).appendTo('div#roomPanel');
+
 
 		// Create the stores container
 		$('<div>').attr('id', 'storesContainer').prependTo('div#roomPanel');
@@ -588,9 +645,23 @@ var Room = {
 		}*/
 		Engine.setTimeout($SM.collectIncome, 1000);
 		Notifications.notify(null,_("{0} wakes up in a dark room.", Engine.x_name));
+		Notifications.notify(null,_("{0} can hardly remember what happened before",Engine.x_name));
 		Notifications.notify(null,_("It's midnight"));
-		Notifications.notify(Room, _("the room is {0}", Room.TempEnum.fromInt($SM.get('game.temperature.value')).text));
-		Notifications.notify(Room, _("the fire is {0}", Room.FireEnum.fromInt($SM.get('game.fire.value')).text));
+		Notifications.notify(Room, _("the room is {0}. {1} is curled up on the ground", Room.TempEnum.fromInt($SM.get('game.temperature.value')).text, Engine.x_name));
+		Notifications.notify(null,_("{0} knows nothing about the world",Engine.x_name));
+		switch(Engine.res[4]){
+			case "N":
+				Notifications.notify(Room,_('{0} gets really upset. {0}\'s mood is very unstable, going up and down easily',Engine.x_name));
+				break;
+			case "*N":
+				Notifications.notify(Room,_('Yet {0} keeps it under control.',Engine.x_name));
+				break;
+			case "=N":
+				Notifications.notify(Room,_('{0} gets upset a little bit, but can still keep the emotions under control',Engine.x_name));
+				break;
+			default:
+				break;
+		}
 	},
 	
 	options: {}, // Nothing for now
@@ -658,17 +729,33 @@ var Room = {
 	updateButton: function() {
 		var light = $('#lightButton.button');
 		var stoke = $('#stokeButton.button');
-		var killtime = $('#killTimeButton.button');
 		var door = $('#openDoorButton.button');
-		var exRoom = $('#exploreRoomButton.button');
-		var prep = $('#prepareButton.button');
+		var look = $('#lookButton.button');
+		var walk = $('#walkRoomButton.button');
+		var walkc = $('#walkCornerButton.button');
+		var painting = $('#paintingButton.button');
+		var papyrus = $('#papyrusButton.button');
+		var notebook = $('#notebookButton.button');
+		var blowDust = $('#blowDustButton.button');
+		var study = $('#studyButton.button');
+		var diary = $('#diaryButton.button');
+		var moveWin = $('#windowButton.button');
+		var sit = $('#sitButton.button');
 		if($SM.get('game.fire.value') == Room.FireEnum.Dead.value && stoke.css('display') != 'none') {
 			stoke.hide();
-			killtime.hide();
 			door.hide();
 			light.show();
-			exRoom.hide();
-			prep.hide();
+			look.hide();
+			walk.hide();
+			walkc.hide();
+			painting.hide();
+			papyrus.hide();
+			notebook.hide();
+			blowDust.hide();
+			study.hide();
+			diary.hide();
+			moveWin.hide();
+			sit.hide();
 			if(stoke.hasClass('disabled')) {
 				Button.cooldown(light);
 			}
@@ -692,7 +779,10 @@ var Room = {
 	_fireTimer: null,
 	_tempTimer: null,
 	_landTimer: null,
-	_prepTimer: null,
+	_baseTimer: null,
+	_currButton: "",
+	_numWalk: 0,
+
 	lightFire: function() {
 		var wood = $SM.get('stores.wood');
 		if(wood < 5) {
@@ -726,8 +816,10 @@ var Room = {
 				if($SM.get('game.temperature.value') == 4) Room._FIRST_HOT+=1;
 			}
 		}
-		Notifications.notify(null,_("The room is {0}",Room.TempEnum.fromInt($SM.get('game.temperature.value')).text),true);
 		Notifications.notify(null,_("{0} picks up a log of wood and lights it.",Engine.x_name),true);
+		Notifications.notify(null,_("The wood is {0}", Room.FireEnum.fromInt($SM.get('game.temperature.value')).text));
+		Notifications.notify(null,_("The room is {0}",Room.TempEnum.fromInt($SM.get('game.temperature.value')).text),true);
+		
 
 		Room.onFireChange();
 	},
@@ -742,7 +834,13 @@ var Room = {
 			Notifications.notify(Room, _("the light from the fire spills from the windows, out into the dark"));
 			Engine.setTimeout(Room.updateBuilderState, Room._BUILDER_STATE_DELAY);
 		}*/	
-		if($SM.get('game.temperature.value') == 4 && Room._FIRST_HOT == 1){
+		if($SM.get('game.temperature.value') == 3){
+			Notifications.notify(Room,_('{0} feels warm now. {0} begins to look around the environment',Engine.x_name));
+			var look = $('#lookButton.button');
+			look.show();
+
+		}
+		/*if($SM.get('game.temperature.value') == 4 && Room._FIRST_HOT == 1){
 			Notifications.notify(Room,_("{0} now starts to look around the room.",Engine.x_name),true);
 			Notifications.notify(Room,_("The room is empty."),true);
 			Notifications.notify(Room,_("The night was long. The time passed slowly."),true);
@@ -751,7 +849,7 @@ var Room = {
 			//set up kill time
 			Room.enableKillTime();
 			Room._FIRST_HOT+=1;
-		}
+		}*/
 		window.clearTimeout(Room._fireTimer);
 		Room._fireTimer = Engine.setTimeout(Room.coolFire, Room._FIRE_COOL_DELAY);
 		Room.updateButton();
@@ -807,49 +905,219 @@ var Room = {
 		Engine.event('progress', 'outside');
 	},
 
-	enableWood: function() {
-		var gather = $('#gatherButton.button');
-		gather.show();
+	enableButton: function(id) {
+		var butt = $(_('#{0}.button',id));
+		butt.show();
+		if(id == 'openDoorButton') Notifications.notify(Room,_('The day comes'));
+		window.clearTimeout(Room._baseTimer);
+
 	},
 
-	enableKillTime: function(){
-		var killtime = $('#killTimeButton.button');
-		killtime.show();
+	lookAround: function(){
+		Notifications.notify(Room,_("It is a little cabin that looks pretty old. There is not much in the cabin"));
+		Notifications.notify(Room,_("{0} starts to examine the room.",Engine.x_name));
+		var walk = $('#walkRoomButton.button');
+		var look = $('#lookButton.button');
+		walk.show();
+		look.remove(); //or hide
 	},
 
-	killTime: function(){
-		Notifications.notify(Room,_("The day comes."));
-		Room._landTimer = Engine.setTimeout(Room.enableDoor, Room._DESERTED_LAND_DELAY);
-			
+	walkAround: function(){
+		Room._numWalk+=1;
+		if(Room._numWalk == 1){
+			Notifications.notify(Room,_("{0} finds a pile of stuff in the corner, covered by some kind of cloth",Engine.x_name));
+			Room._baseTimer = Engine.setTimeout(Room.enableButton.bind(null,'walkCornerButton'), 3*1000);
+		} else {
+			Notifications.notify(Room,_("{0} finds nothing new in the room.",Engine.x_name));
+		}
 	},
 
-	enableDoor: function(){
-		var kt = $('#killTimeButton.button');
-		//remove kt?
-		kt.hide();
+	walkCorner: function(){
+		Notifications.notify(Room,_("{0} removes the suede cover and finds a middle-scale oil painting, a scroll of papyrus, and an old thick notebook.",Engine.x_name));
+		Notifications.notify(Room,_("There is also a pile of hay, some ropes, a compass and some other stuff."));
+		var painting = $('#paintingButton.button');
+		var papyrus = $('#papyrusButton.button');
+		var notebook = $('#notebookButton.button');
+		var walk = $('#walkCornerButton.button');
+		painting.show();
+		papyrus.show();
+		notebook.show();
+		walk.hide();
+	},
+
+	pickupPainting: function(){
+		Notifications.notify(Room,_("The painting seems to be the view of the unknown world. But it is covered with thick dust and cannot be seen very clearly."));
+		var dust = $('#blowDustButton.button');
+		var painting = $('#paintingButton.button');
+		dust.show();
+		painting.hide();
+	},
+
+	pickupPapyrus: function(){
+		var papyrus = $('#papyrusButton.button');
+		papyrus.hide();
+		var study = $('#studyButton.button');
+		study.show();
+		Notifications.notify(Room,_('{0} unrolls the scroll of papyrus',Engine.x_name));
+	},
+
+	pickupNotebook: function(){
+		Notifications.notify(Room,_('The notebook is gorgeous and is a classic. It appears to be a diary from a former traveler who spent several nights in this cabin.'));
+		var notebook = $('#notebookButton.button');
+		var diary = $('#diaryButton.button');
+		notebook.hide();
+		diary.show();
+	},
+
+	blowDust: function(){
+		switch(Engine.res[0]){
+			case "O":
+				Notifications.notify(Room, _("{0} can see a forest, a river, and a beautiful sunset on the painting.",Engine.x_name));
+				Notifications.notify(Room,_('{0} can imagine how the new world becomes vivid with lots of details.',Engine.x_name));
+				Notifications.notify(Room, _('{0} enjoys the beauty of the art and the beauty of nature.',Engine.x_name));
+				Notifications.notify(Room,_('{0} can always see beauty in things that others might not notice.',Engine.x_name));
+				break;
+			case "*O":
+				Notifications.notify(Room,_('{0} can see the forest, the river, and a beautiful sunset on the painting, but is not emotionally moved by it.',Engine.x_name));
+				Notifications.notify(Room,_('{0} does not have a very good imagination to imagine the new world with lots of details.',Engine.x_name));
+				break;
+			case "=O":
+				Notifications.notify(Room,_('{0} can see the forest, the river, and a beautiful sunset on the painting.',Engine.x_name));
+				Notifications.notify(Room,_('{0} has normal imagination, so sometimes gets immersed in the painting.',Engine.x_name));
+				Notifications.notify(Room,_('{0} does not have strong feelings on the beauty of nature and art, but also does not feel repugnance.',Engine.x_name));
+				break;
+			default:
+				break;
+		}
+		var blow = $('#blowDustButton.button');
+		blow.hide();
+
+	},
+
+	studySymbols: function(){
+		var study = $('#studyButton.button');
+		study.hide();
+		switch(Engine.res[0]){
+			case "O":
+				Notifications.notify(Room,_('{0} loves difficult and challenging materials.',Engine.x_name));
+				Notifications.notify(Room,_('{0} is quick in understanding.',Engine.x_name));
+				Notifications.notify(Room,_('{0} is full of ideas, and begins to scrutinize the symbols, hoping to get some interesting findings.',Engine.x_name));
+				break;
+			case "*O":
+				Notifications.notify(Room,_('After a very short time, {0} gave up probing the papyrus.',Engine.x_name));
+				Notifications.notify(Room,_('{0} doesn’t like those abstract ideas at all, and never understand why things need to be these complex.',Engine.x_name));
+				Notifications.notify(Room,_('{0} likes simple and straightforward materials.',Engine.x_name));
+				break;
+			case "=0":
+				Notifications.notify(Room,_('After trying for some time, {0} gave up probing the papyrus.',Engine.x_name));
+				Notifications.notify(Room,_('{0} does not try to avoid all the complex problems, but {0} also does not have a strong interest in it.',Engine.x_name));
+				break;
+			default:
+				break;
+		}
+	},
+
+	readDiary: function(){
+		Notifications.notify(Room,_('The diary describes the traveler’s life in general and the traveler\'s lovely child. It narrates some family issues and emotional struggles.'));
+		switch(Engine.res[3]){
+			case "A":
+				Notifications.notify(Room,_('{0} is not really interested in the traveler’s problems, and is indifferent to the traveler’s feeling.',Engine.x_name));
+				Notifications.notify(Room,_('{0} normally takes no time for others.',Engine.x_name));
+				break;
+			case "*A":
+				Notifications.notify(Room,_('{0} loves the traveler’s child.',Engine.x_name));
+				Notifications.notify(Room,_('{0} sympathizes with the traveler’s feelings.',Engine.x_name));
+				Notifications.notify(Room,_('{0} really wants to comfort the traveler and offers help to solve the problems.',Engine.x_name));
+				Notifications.notify(Room,_('{0} likes to do things for others.',Engine.x_name));
+				break;
+			case "=A":
+				Notifications.notify(Room,_('{0} can feel a little bit emotions, but is also not interested in other people’s problems.',Engine.x_name));
+				break;
+			default:
+				break;
+		}
+		var diary = $('#diaryButton.button');
+		diary.hide();
+		//add timer here?
+		Notifications.notify(Room,_("Suddenly, {0} heard some cracking sounds outside the window.",Engine.x_name));
+		switch(Engine.res[4]){
+			case "N":
+				Notifications.notify(Room,_('{0} feel threatened and gets panic.',Engine.x_name));
+				Notifications.notify(Room,_('But {0} still decides to examine what happened.',Engine.x_name));
+				break;
+			case "*N":
+				Notifications.notify(Room,_('{0} stays calm.',Engine.x_name));
+				Notifications.notify(Room,_('But {0} still decides to examine what happened.',Engine.x_name));
+				break;
+			case "=N":
+				Notifications.notify(Room,_('{0} is little concerned, but still stays calm.',Engine.x_name));
+				Notifications.notify(Room,_('But {0} still decides to examine what happened.',Engine.x_name));
+				break;
+			default:
+				break;
+		}
+		var moveWin = $('#windowButton.button');
+		moveWin.show();
+	},
+
+	moveWindow: function(){
+		Notifications.notify(Room,_('{0} carefully moves toward the window',Engine.x_name));
+		switch(Engine.res[4]){
+			case "N":
+				Notifications.notify(Room,_('{0} finds some branches that are on the ground in the snow.',Engine.x_name));
+				Notifications.notify(Room,_('{0} worries a lot, and guesses that the sounds were from some fierce beasts or even someone else.',Engine.x_name));
+				break;
+			case "*N":
+				Notifications.notify(Room,_('{0} finds some branches that are on the ground in the snow.',Engine.x_name));
+				Notifications.notify(Room,_('{0} guesses that the sounds were from the branches which probably fell because of wind. {0} is not bothered by it.',Engine.x_name));
+				break;
+			case "=N":
+				Notifications.notify(Room,_('{0} finds some branches that are on the ground in the snow.',Engine.x_name));
+				Notifications.notify(Room,_('{0} still feels afraid a little bit, but tries to believe that the sounds and the fallen branches were only because of the wind, so {0} is not very worried.',Engine.x_name));
+				break;
+			default:
+				break;		
+		}
+		var mw = $('#windowButton.button');
+		var sit = $('#sitButton.button');
+		mw.hide();
+		sit.show();
+	},
+
+	sitBack: function(){
+		Notifications.notify(Room,_('The night is long, and the wind is blowing strongly.'));
+		Notifications.notify(Room,_('There is no one around, and nothing else to do.'));
+		switch(Engine.res[2]){
+			case "E":
+				Notifications.notify(Room,_('{0} doesn’t like being alone. {0} misses people and parties.',Engine.x_name));
+				Notifications.notify(Room,_('{0} expects to meet someone else in the new world.',Engine.x_name));
+				Notifications.notify(Room,_('{0} feels more comfortable around people.',Engine.x_name));
+				break;
+			case "*E":
+				Notifications.notify(Room,_('{0} feels comfortable alone. X doesn’t talk a lot.',Engine.x_name));
+				Notifications.notify(Room,_('{0} doesn’t wish to meet anyone in the new world.',Engine.x_name));
+				break;
+			case "=E":
+				Notifications.notify(Room,_('{0} feels comfortable alone, but feels ok to meet someone else.',Engine.x_name));
+				break;
+			default:
+				break;
+		}
+		Room._baseTimer = Engine.setTimeout(Room.enableButton.bind(null,'openDoorButton'),3*1000);
+		var sit = $('#sitButton.button');
+		sit.hide();
+	},
+
+	openDoor: function(){
+		Notifications.notify(Room,_('A deserted land unfolded in front of {0}. But there is not much to see in the sight.',Engine.x_name));
 		var door = $('#openDoorButton.button');
-		door.show();
-		window.clearTimeout(Room._landTimer);
-	},
-
-	explore: function(){
-		var prep = $('#prepareButton.button');
-		prep.show();
-		var exploreButt = $('#exploreRoomButton.button');
-		exploreButt.hide();
-	},
-
-
-	prepare: function(){
-		Room._prepTimer = Engine.setTimeout(Room.prepareMove, Room._GATHER_DELAY * 1000);	
-	},
-
-	prepareMove: function(){
-		var walkTo = $('#walkTowardButton.button');
-		walkTo.show();
+		door.hide();
+		Outside.init();
+		var wc = $('#walkCabinButton.button');
+		wc.show();
 		Engine.travelTo(Outside);
 	},
-	
+
 	updateBuilderState: function() {
 		var lBuilder = $SM.get('game.builder.level');
 		if(lBuilder === 0) {
@@ -878,6 +1146,7 @@ var Room = {
 		Engine.saveGame();
 	},
 	
+
 	updateStoresView: function() {
 		var stores = $('div#stores');
 		var resources = $('div#resources');

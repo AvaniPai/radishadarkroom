@@ -105,6 +105,7 @@
 			Engine.loadQuiz();
 			
 		},
+
 		completeInit: function(ocean){
 			if(this.options.state != null) {
 					window.State = this.options.state;
@@ -933,14 +934,17 @@
 					return new Promise(resolve => setTimeout(resolve,ms));
 				}
 
+				var people = 'Oakley, Azariah, Landry, Skyler, Armani, Taylor, Briar, Lennon, Alex, Casey, Emory, Milan, Eden, Bodhi, Frankie, Dakota, Finley, Drew, Hayden'.split(",");
+				Engine.x_name = people[Math.floor(Math.random() * people.length)];
+
 				$('<p>')
 					.attr('id','loading')
 					.text('Calculating your personality test result...')
 					.prependTo('#wrapper');
 
-				console.log("sleeping");
+				//console.log("sleeping");
 				await sleep(2000);
-				console.log("awake");
+				//console.log("awake");
 				$('#loading').remove();
 				$('<p>')
 					.attr('id','title')
@@ -948,14 +952,14 @@
 					.text('Welcome to A Dark Room')
 					.prependTo('#wrapper');
 				
-				if(!Engine.flipped){
+				/*if(!Engine.flipped){
 					$('<p>')
 						.addClass('persText')
 						.text('Based on the test, we have generated a virtual representation with a personality is similar to yours.')
 						.appendTo('#title');
 					$('<p>')
 						.addClass('persText')
-						.text(Engine.decidePersonality(ocean))
+						//.text(Engine.decidePersonality(ocean))
 						.appendTo('#title');
 				} else {
 					//add class so that we can make it pretty
@@ -965,7 +969,7 @@
 							.appendTo('#title');
 						$('<p>')
 							.addClass('persText')
-							.text(Engine.decidePersonality(ocean))
+							//.text(Engine.decidePersonality(ocean))
 							.appendTo('#title');
 				}
 
@@ -974,7 +978,18 @@
 					.attr('type','button')
 					.attr('onclick','Engine.ready()')
 					.attr('value','Ready to proceed!')
+					.appendTo('#title');*/
+
+				$('<p>')
+					.text('Welcome to A Dark Room')
 					.appendTo('#title');
+				$('<p>')
+					.text(_('This is a story about {0}\'s strange experiences in a new world'),Engine.x_name)
+					.appendTo('#title');
+
+				sleep(5000);
+				$('#title').remove();
+				Engine.completeInit(Engine.res);
 				
 		},
 
@@ -989,8 +1004,8 @@
 			//pure is assigned on whether they score > 6 on a trait
 			//star is assigned on whether they score < 6 on a trait
 			function attribute(scores, letter){
-				console.log(_("scores {0}, letter {1}", scores, letter));
-				console.log(scores[0]+scores[1]);
+				//console.log(_("scores {0}, letter {1}", scores, letter));
+				//console.log(scores[0]+scores[1]);
 				if((scores[0]+scores[1]) > 6) return letter;
 				else if((scores[0]+scores[1]) < 6) return '*'+letter;
 				return '='+letter;
@@ -1003,6 +1018,7 @@
 			var N = [];
 			for(var i=1; i<11; i++){
 				var data = $('input[name=q'+i.toString()+']:checked').val();
+				//update double array
 				//console.log(data);
 				switch(data[0]){
 					case 'O':

@@ -172,20 +172,45 @@ var Outside = {
 			cooldown: Outside._GATHER_DELAY,
 			width: '80px'
 		}).appendTo('div#outsidePanel');*/
+		var arriveTownTimer = null;
+		var _baseTimer = null;
 
 		new Button.Button({
-			id: 'exploreOutsideButton',
-			text: _("go on an exploration"),
-			click: Outside.explore,
-			cooldown: Outside._QUICK,
+			id: 'walkCabinButton',
+			text: _("walk around outside the cabin"),
+			click: Outside.walkCabin,
 			width: '80px'
 		}).appendTo('div#outsidePanel');
 
 		new Button.Button({
-			id: 'laterButton',
-			text: _("later"),
-			click: Outside.later,
-			cooldown: Outside._QUICK,
+			id: 'exploreButton',
+			text: _("go an exploration"),
+			click: Outside.explore,
+			width: '80px'
+		}).appendTo('div#outsidePanel');
+
+		new Button.Button({
+			id: 'prepareButton',
+			text: _("prepare for trip"),
+			click: Outside.prepare,
+			cooldown: Outside._GATHER_DELAY,
+			width: '80px'
+		}).appendTo('div#outsidePanel');
+
+
+		new Button.Button({
+			id: 'planButton',
+			text: _("plan the trip"),
+			click: Outside.plan,
+			cooldown: 3,
+			width: '80px'
+		}).appendTo('div#outsidePanel');
+
+		new Button.Button({
+			id: 'collectButton',
+			text: _("collect stuff"),
+			click: Outside.collect,
+			cooldown: 3,
 			width: '80px'
 		}).appendTo('div#outsidePanel');
 
@@ -197,58 +222,180 @@ var Outside = {
 			cooldown: Outside._GATHER_DELAY,
 		}).appendTo('div#outsidePanel');
 
-			
-
 		Outside.updateButtons();
 		//Outside.updateTrapButton();
 
 	},
 
 	updateButtons: function(){
-		var exOut = $('#exploreOutsideButton.button');
-		var later = $('#laterButton.button');
-		var walkTo = $('#walkTowardButton.button');
-		walkTo.hide();
-		exOut.show();
-		later.show();
-	},
-
-	explore: function(){
-		var later = $('#laterButton.button');
-		Button.setDisabled(later,true);
-		var exOut = $('#exploreOutsideButton.button');
-		//exOut.hide();
-		Button.setDisabled(exOut,true);
-		var exRoom = $('#exploreRoomButton.button');
-		//exRoom.hide();
-		Button.setDisabled(exRoom,true);
+		var walkCabin = $('#walkCabinButton.button');
+		var ex = $('#exploreButton.button');
+		var plan = $('#planButton.button');
+		var collect = $('#collectButton.button');
 		var prep = $('#prepareButton.button');
-		prep.show();
-		Engine.travelTo(Room);
+		var walkTo = $('#walkTowardButton.button');
+		
+		walkCabin.hide();
+		ex.hide();
+		prep.hide();
+		plan.hide();
+		collect.hide();
+		walkTo.hide();
 	},
 
-	later: function(){
-		var later = $('#laterButton.button');
-		Button.setDisabled(later,true);
-		//remove exploreOutside completely
-		var exOut = $('#exploreOutsideButton.button');
-		Button.setDisabled(exOut,true);
-		var exRoom = $('#exploreRoomButton.button');
-		exRoom.show();
-		Notifications.notify(Room,_("{0} goes back to the room.",Engine.x_name));
-		Notifications.notify(Room,_("There is not much to do in the room."));
-		
-		Engine.travelTo(Room);
+	enableButton: function(id){
+		var butt = $(_('#{0}.button',id));
+		butt.show();
+		window.clearTimeout(Outside._baseTimer);
+	},
 
+	walkCabin: function(){
+		Notifications.notify(Outside,_('There seems to be a small town at the horizon on the east.'));
+		var wc = $('#walkCabinButton.button');
+		var explore = $('#exploreButton.button');
+		explore.show();
+		wc.hide();
+	},
+
+ 	explore: function(){
+ 		switch(Engine.res[2]){
+ 			case "E":
+ 				Notifications.notify(Outside,_('{0} has a strong and assertive personality.',Engine.x_name));
+				Notifications.notify(Outside,_('{0} decides to go on an exploration trip.',Engine.x_name));
+ 				break;
+ 			case "*E":
+ 				Notifications.notify(Outside,_('{0} does not have a strong assertive personality.',Engine.x_name));
+				Notifications.notify(Outside,_('{0} holds back own ideas, and always waits to be influenced by the others.', Engine.x_name));
+				Notifications.notify(Outside,_('After sometime of hesitating, {0} finally decides to go on an exploration trip.',Engine.x_name));
+ 				break;
+ 			case "=E":
+ 				Notifications.notify(Outside,_('{0} sometimes is assertive and sometimes is not.',Engine.x_name));
+				Notifications.notify(Outside,_('{0} decides to go on an exploration trip.',Engine.x_name));
+ 				break;
+ 			default:
+ 				break;
+ 		}
+ 		var ex = $('#exploreButton.button');
+ 		var prep = $('#prepareButton.button');
+		prep.show();
+		ex.hide();
+ 	},
+
+	prepare: function(){
+		var plan =  $('#planButton.button');
+		var collect = $('#collectButton.button');
+		var prepare = $('#prepareButton.button');
+		plan.show();
+		collect.show();
+		prepare.hide();
+	},
+
+ 	plan: function(){
+		switch(Engine.res[1]){
+			case "C":
+				Notifications.notify(Outside,_('{0} plans every details of the trip.',Engine.x_name));
+				Notifications.notify(Outside,_('{0} decide to leave at 10 AM.',Engine.x_name));
+				break;
+			case "*C":
+				Notifications.notify(Outside,_('{0} doesn’t like to make plans.',Engine.x_name));
+				Notifications.notify(Outside,_('{0} prefers to be more flexible, so {0} decide to leave approximately some time between 10 AM to 11 AM.',Engine.x_name));
+				break;
+			case "=C":
+				Notifications.notify(Outside,_('{0} sometimes follows a schedule, but sometimes not.',Engine.x_name));
+				Notifications.notify(Outside,_('{0} made a rough schedule, and decide to leave approximately at 10 AM.',Engine.x_name));
+				break;
+			default:
+				break;
+		}
+
+	},
+
+	collect: function(){
+		switch(Engine.res[1]){
+			case "C":
+				Notifications.notify(Outside,_('{0} makes a list of things that need to be brought.',Engine.x_name));
+				Notifications.notify(Outside,_('{0} picks up a compass, some matches, and a travelling bag, and efficiently packs the bag a long time before the trip.',Engine.x_name));
+				break;
+			case "*C":
+				Notifications.notify(Outside,_('{0} cannot find the compass.',Engine.x_name));
+				Notifications.notify(Outside,_('{0} remembers use it sometimes and forgot to put it back to a proper place.',Engine.x_name));
+				Notifications.notify(Outside,_('{0} poured the whole bag out, and found the compass was among a bunch of things.',Engine.x_name));
+				Notifications.notify(Outside,_('{0} didn’t get ready until the very last minute.',Engine.x_name));
+				Notifications.notify(Outside,_('{0} grabs all the stuff right before starting the trip.',Engine.x_name));
+				break;
+			case "=C":
+				Notifications.notify(Outside,_('{0} sometimes can keep the stuff organized, but sometime can be very messy.',Engine.x_name)); 
+				Notifications.notify(Outside,_('{0} packs the bag ok this time.',Engine.x_name));
+				Notifications.notify(Outside,_('{0 loosely packs all the things, not in a super organized way, but still keep everything together.',Engine.x_name));
+				break;
+			default:
+				break;
+		}
+		var collect = $('#collectButton.button');
+		var plan = $('#planButton.button');
+		collect.hide();
+		plan.hide();
+		Outside._baseTimer = Engine.setTimeout(Outside.enableButton.bind(null,'walkTowardButton'),3*1000);
 	},
 
 	walk: function(){
-		Notifications.notify(Outside,_("After walking for an hour, {0} finds a small town lays ahead.",Engine.x_name));
+		switch(Engine.res[1]){
+			case "C":
+				Notifications.notify(Outside,_('{0} has been hiking for about an hour.',Engine.x_name));
+				Notifications.notify(Outside,_('{0} carries out the plan strictly.',Engine.x_name));
+				Notifications.notify(Outside,_('It’s 11 AM. {0} rests for 10 minutes according to the plan.',Engine.x_name));
+				break;
+			case "*C":
+				Notifications.notify(Outside,_('{0} wastes some time on the way.',Engine.x_name));
+				Notifications.notify(Outside,_('{0} is distracted by an interesting plant.',Engine.x_name));
+				Notifications.notify(Outside,_('{0} rests whenever {0} wishes to.',Engine.x_name));
+				Notifications.notify(Outside,_('{0} suddenly finds that the backup torch is lost somewhere along the trip.',Engine.x_name));
+				Notifications.notify(Outside,_('{0} always leaves belongings around.',Engine.x_name));
+				break;
+			case "=C":
+				Notifications.notify(Outside,_('{0} sometimes can carry out the plan, but sometimes can’t get down to work.',Engine.x_name));
+				Notifications.notify(Outside,_('{0} is roughly on schedule, a little bit behind, but not much.',Engine.x_name));
+				break;
+			default:
+				break;	
+		}
+		Outside.arriveTownTimer = Engine.setTimeout(Outside.displayTown,6*1000);
 		var walkTo = $('#walkTowardButton.button');
-		Button.setDisabled(walkTo,true);
-		Engine.travelTo(Path);
+		Button.setDisabled(walkTo,false);
 	},
-	
+
+	displayTown: function(){
+		Path.init();
+		Notifications.notify(Outside,_('After hiking for two hours, a small town lays ahead.',Engine.x_name));
+		switch(Engine.res[0]){
+			case "O":
+				Notifications.notify(Outside,_('{0} is so excited about entering the town.',Engine.x_name));
+				break;
+			case "*O":
+				Notifications.notify(Outside,_('{0} does not feel excited about entering the town.',Engine.x_name));
+				break;
+			case "=O":
+				Notifications.notify(Outside,_('{0} does not have strong feelings.',Engine.x_name));
+				Notifications.notify(Outside,_('But {0} still wants to enter the small town.',Engine.x_name));
+				break;
+			default:
+				break;
+		}
+		switch(Engine.res[2]){
+			case "E":
+				Notifications.notify(Outside,_('{0} imagines that there might be someone else in the town, and is very excited in changing cloth.',Engine.x_name));
+				break;
+			case "*E":
+				Notifications.notify(Outside,_('{0} imagines to enter the town without encountering any other people.',Engine.x_name));
+				break;
+			case "=E":
+				Notifications.notify(Outside,_('{0} is not sure whether to expect or not to about meeting another person.',Engine.x_name));
+				break;
+			default:
+				break;
+		}
+	},
+
 	getMaxPopulation: function() {
 		return $SM.get('game.buildings["hut"]', true) * Outside._HUT_ROOM;
 	},

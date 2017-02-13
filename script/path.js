@@ -38,29 +38,9 @@ var Path = {
 		$('<div>').attr('id', 'bagspace').appendTo(outfitting);*/
 		
 		// Add the embark button
-		new Button.Button({
-			id: 'walkSmallTownButton',
-			text: _("walk around the perimeter of the small town"),
-			click: Path.walk,
-			width: '80px',
-			cooldown: Outside._GATHER_DELAY,
-		}).appendTo('div#pathPanel');
-		
-		new Button.Button({
-			id: 'returnButton',
-			text: _("go back"),
-			click: Path.back,
-			width: '80px',
-			cooldown: Outside._GATHER_DELAY,
-		}).appendTo('div#pathPanel');
 
-		new Button.Button({
-			id: 'enterButton',
-			text: _("enter the town"),
-			click: Path.enter,
-			width: '80px',
-			cooldown: Outside._GATHER_DELAY,
-		}).appendTo('div#pathPanel');
+		
+		
 
 		Path.outfit = $SM.get('outfit');
 		
@@ -71,12 +51,7 @@ var Path = {
 	},
 
 	updateButtons: function(){
-		var walkTown = $('#walkSmallTownButton.button');
-		var ret = $('#returnButton.button');
-		var enter = $('#enterButton.button');
-		walkTown.show();
-		ret.hide();
-		enter.hide();
+		
 	},
 
 	walk: function(){
