@@ -32,14 +32,30 @@ var Path = {
 		this.panel = $('<div>').attr('id', "pathPanel")
 			.addClass('location')
 			.appendTo('div#locationSlider');
+
+		var people = 'Oakley, Azariah, Landry, Skyler, Armani, Taylor, Briar, Lennon, Alex, Casey, Emory, Milan, Eden, Bodhi, Frankie, Dakota, Finley, Drew, Hayden'.split(",");
+		var newname =people[Math.floor(Math.random() * people.length)]; 
+		while( newname === Engine.x_name){
+			newname =people[Math.floor(Math.random() * people.length)];
+		}	
+		this.y_name = newname;
+		
 		
 		// Add the outfitting area
 		/*var outfitting = $('<div>').attr({'id': 'outfitting', 'data-legend': _('supplies:')}).appendTo(this.panel);
 		$('<div>').attr('id', 'bagspace').appendTo(outfitting);*/
 		
 		// Add the embark button
-
+		new Button.Button({
+			id: 'finishButton',
+			text: _("exit the game"),
+			click: Path.exit,
+			width: '80px'
+		}).appendTo('div#pathPanel');
 		
+		/*Notifications.notify(Path,_('There seems to be someone walking on the street not far away.'));
+		Notifications.notify(Path,_('{0} and the stranger notices each other at the same time.',Engine.x_name));
+		Notifications.notify(Path,_('The stranger walks to {0}, and makes a short introduction: My name is {1}.',Engine.x_name,Path.y_name));*/
 		
 
 		Path.outfit = $SM.get('outfit');
@@ -81,6 +97,9 @@ var Path = {
 		Notifications.notify(Path,_("X enters the small town. The unknown trip begins.",Engine.x_name));
 		var enter = $('#enterButton.button');
 		enter.hide();
+		Engine.cleanUp();
+	},
+	exit: function(){
 		Engine.cleanUp();
 	},
 

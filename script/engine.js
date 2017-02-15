@@ -809,9 +809,93 @@
 		},
 		//TODO: double check
 		loadQuiz: function(){
-			var reg = ["Ohas an active imagination","Cdoes a thorough job","Eis outgoing/sociable", 
-			"Ais generally trusting","Ngets nervous easily","*Atends to find fault with others","*Ohas few artistic interests",
-			"*Ctends to be lazy", "*Nis relaxed, handles stress well","*Eis reserved"]
+			var oq = ['OI see myself as someone who is inventive.', 
+					'OI see myself as someone who is original, comes up with new ideas.', 
+					'OI see myself as someone who values artistic, aesthetic experiences.',
+					'OI see myself as someone who is curious about many different things.', 
+					'OI see myself as someone who is ingenious, a deep thinker.',  
+					'OI see myself as someone who likes to reflect, play with ideas.', 
+					'OI see myself as someone who has an active imagination.',  
+					'OI see myself as someone who is sophisticated in art, music, or literature.', 
+					'*OI see myself as someone who prefers work that is routine.', 
+					'*OI see myself as someone who has few artistic interests.'];
+			var cq = ['CI see myself as someone who does a thorough job.', 
+					'CI see myself as someone who perseveres until the task is finished.', 
+					'CI see myself as someone who does things efficiently.', 
+					'CI see myself as someone who is a reliable worker.', 
+					'CI see myself as someone who makes plans and follows through with them.', 
+					'*CI see myself as someone who tends to be disorganized.', 
+					'*CI see myself as someone who is easily distracted.', 
+					'*CI see myself as someone who tends to be lazy.', 
+					'*CI see myself as someone who can be somewhat careless.'];
+			var eq = ['EI see myself as someone who is talkative.',
+					'EI see myself as someone who has an assertive personality.',
+					'EI see myself as someone who is full of energy.',
+					'EI see myself as someone who is outgoing, sociable.',
+					'EI see myself as someone who generates a lot of enthusiasm.',
+					'*EI see myself as someone who tends to be quiet.', 
+					'*EI see myself as someone who is reserved.',
+					'*EI see myself as someone who is sometimes shy, inhibited.'];
+			var aq = ['AI see myself as someone who is helpful and unselfish with others.', 
+					'AI see myself as someone who is considerate and kind to almost everyone.', 
+					'AI see myself as someone who has a forgiving nature.', 
+					'AI see myself as someone who likes to cooperate with others.', 
+					'AI see myself as someone who is generally trusting.', 
+					'*AI see myself as someone who tends to find fault with others.', 
+					'*AI see myself as someone who can be cold and aloof.', 
+					'*AI see myself as someone who starts quarrels with others.', 
+					'*AI see myself as someone who is sometimes rude to others.'];
+			var nq = ['NI see myself as someone who is depressed, blue.', 
+					'NIsee myself as someone who can be moody.', 
+					'NI see myself as someone who can be tense.', 
+					'NI see myself as someone who gets nervous easily.', 
+					'NI see myself as someone who worries a lot.', 
+					'*NI see myself as someone who is relaxed, handles stress well.', 
+					'*NI see myself as someone who remains calm in tense situations.', 
+					'*NI see myself as someone who is emotionally stable, not easily upset.'];
+			var xq = ['I would prefer complex to simple problems.',
+					'I like to have the responsibility of handling a situation that requires a lot of thinking.',
+					'Thinking is not my idea of fun.',
+					'I would rather do something that requires little thought than something that is sure to challenge my thinking abilities.',
+					'I try to anticipate and avoid situations where there is likely a chance I will have to think in depth about something.',
+					'I find satisfaction in deliberating hard and for long hours.',
+					'I only think as hard as I have to.',
+					'I prefer to think about small, daily projects to long-term ones.',
+					'I like tasks that require little thought once I’ve learned them.',
+					'The idea of relying on thought to make my way to the top appeals to me.',
+					'I really enjoy a task that involves coming up with new solutions to problems.',
+					'Learning new ways to think doesn’t excite me very much.',
+					'I prefer my life to be filled with puzzles that I must solve.',
+					'The notion of thinking abstractly is appealing to me.',
+					'I would prefer a task that is intellectual, difficult, and important to one that is somewhat important but does not require much thought.',
+					'I feel relief rather than satisfaction after completing a task that required a lot of mental effort.',
+					'It’s enough for me that something gets the job done; I don’t care how or why it works.',
+					'I usually end up deliberating about issues even when they do not affect me personally.',
+					'I can always manage to solve difficult problems if I try hard enough.',
+					'If someone opposes me, I can find the means and ways to get what I want.',
+					'It is easy for me to stick to my aims and accomplish my goals.',
+					'I am confident that I could deal efficiently with unexpected events.',
+					'Thanks to my resourcefulness, I know how to handle unforeseen situations.',
+					'I can solve most problems if I invest the necessary effort.',
+					'I can remain calm when facing difficulties because I can rely on my coping abilities.',
+					'When I am confronted with a problem, I can usually find several solutions.',
+					'If I am in trouble, I can usually think of a solution.',
+					'I can usually handle whatever comes my way.',
+					'In uncertain times, I usually expect the best.',
+					'I always look on the bright side of things.',
+					'I’m always optimistic about my future.',
+					'When I undertake something new, I expect to succeed.',
+					'Where there’s a will, there’s a way.',
+					'In general, things turn out alright in the end.', 
+					'It is best not to get your hopes too high since you will probably be disappointed.',
+					'Rarely do I expect good things to happen.',
+					'If something can go wrong for me, it will.',
+					'I hardly ever expect things to go my way.',
+					'Things never work out the way I want them to.',
+					'If I make a decision on my own, I can pretty much count on the fact that it will turn out to be a poor one.',
+					'I rarely count on good things happening to me.',
+					'Better to expect defeat then it doesn’t hit so hard when it comes.']
+			var reg = oq.concat(cq.concat(eq.concat(aq.concat(nq))));
 
 			var form = $('<form>')
 				.attr('id','fm')
@@ -951,34 +1035,6 @@
 					.addClass('persText')
 					.text('Welcome to A Dark Room')
 					.prependTo('#wrapper');
-				
-				/*if(!Engine.flipped){
-					$('<p>')
-						.addClass('persText')
-						.text('Based on the test, we have generated a virtual representation with a personality is similar to yours.')
-						.appendTo('#title');
-					$('<p>')
-						.addClass('persText')
-						//.text(Engine.decidePersonality(ocean))
-						.appendTo('#title');
-				} else {
-					//add class so that we can make it pretty
-						$('<p>')
-							.addClass('persText')
-							.text('Based on the personality test, we have generated a virtual representation with a personality differs from yours.')
-							.appendTo('#title');
-						$('<p>')
-							.addClass('persText')
-							//.text(Engine.decidePersonality(ocean))
-							.appendTo('#title');
-				}
-
-
-				$('<input>')
-					.attr('type','button')
-					.attr('onclick','Engine.ready()')
-					.attr('value','Ready to proceed!')
-					.appendTo('#title');*/
 
 				$('<p>')
 					.text('Welcome to A Dark Room')
@@ -1001,14 +1057,32 @@
 			
 		score: function(){
 			//clear is pure, * is anti, half chance of flipping their received config. 
-			//pure is assigned on whether they score > 6 on a trait
-			//star is assigned on whether they score < 6 on a trait
+			//pure is assigned on whether they score > mean on a trait
+			//star is assigned on whether they score < mean on a trait
 			function attribute(scores, letter){
 				//console.log(_("scores {0}, letter {1}", scores, letter));
 				//console.log(scores[0]+scores[1]);
-				if((scores[0]+scores[1]) > 6) return letter;
-				else if((scores[0]+scores[1]) < 6) return '*'+letter;
-				return '='+letter;
+				switch(letter){
+					case "O":
+						if(scores.reduce(sum) > 30) return letter;
+						else if ( scores.reduce(sum) < 30) return '*'+letter;
+						return '='+letter;
+						break;
+					case "E":
+						if(scores.reduce(sum) > 24) return letter;
+						else if ( scores.reduce(sum) < 24) return '*'+letter;
+						return '='+letter;
+						break;
+					default:
+						if(scores.reduce(sum) > 27) return letter;
+						else if ( scores.reduce(sum) < 27) return '*'+letter;
+						return '='+letter;
+						break;
+				}
+			}
+
+			function sum(total,num){
+				return total + num;
 			}
 
 			var O = [];
