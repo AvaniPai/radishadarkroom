@@ -294,15 +294,15 @@ var Outside = {
 		switch(Engine.res[1]){
 			case "C":
 				Notifications.notify(Outside,_('{0} plans every details of the trip.',Engine.x_name));
-				Notifications.notify(Outside,_('{0} decide to leave at 10 AM.',Engine.x_name));
+				Notifications.notify(Outside,_('{0} decides to leave at 10 AM.',Engine.x_name));
 				break;
 			case "*C":
 				Notifications.notify(Outside,_('{0} doesn’t like to make plans.',Engine.x_name));
-				Notifications.notify(Outside,_('{0} prefers to be more flexible, so {0} decide to leave approximately some time between 10 AM to 11 AM.',Engine.x_name));
+				Notifications.notify(Outside,_('{0} prefers to be more flexible, so {0} decides to leave approximately some time between 10 AM to 11 AM.',Engine.x_name));
 				break;
 			case "=C":
 				Notifications.notify(Outside,_('{0} sometimes follows a schedule, but sometimes not.',Engine.x_name));
-				Notifications.notify(Outside,_('{0} made a rough schedule, and decide to leave approximately at 10 AM.',Engine.x_name));
+				Notifications.notify(Outside,_('{0} made a rough schedule, and decides to leave approximately at 10 AM.',Engine.x_name));
 				break;
 			default:
 				break;
@@ -318,15 +318,15 @@ var Outside = {
 				break;
 			case "*C":
 				Notifications.notify(Outside,_('{0} cannot find the compass.',Engine.x_name));
-				Notifications.notify(Outside,_('{0} remembers use it sometimes and forgot to put it back to a proper place.',Engine.x_name));
-				Notifications.notify(Outside,_('{0} poured the whole bag out, and found the compass was among a bunch of things.',Engine.x_name));
+				Notifications.notify(Outside,_('{0} remembers use it sometimes and forgets to put it back in its proper place.',Engine.x_name));
+				Notifications.notify(Outside,_('{0} pours the whole bag out, and finds the compass among a bunch of things.',Engine.x_name));
 				Notifications.notify(Outside,_('{0} didn’t get ready until the very last minute.',Engine.x_name));
 				Notifications.notify(Outside,_('{0} grabs all the stuff right before starting the trip.',Engine.x_name));
 				break;
 			case "=C":
 				Notifications.notify(Outside,_('{0} sometimes can keep the stuff organized, but sometime can be very messy.',Engine.x_name)); 
 				Notifications.notify(Outside,_('{0} packs the bag ok this time.',Engine.x_name));
-				Notifications.notify(Outside,_('{0 loosely packs all the things, not in a super organized way, but still keep everything together.',Engine.x_name));
+				Notifications.notify(Outside,_('{0 loosely packs all the things, not in a super organized way, but still keeping everything together.',Engine.x_name));
 				break;
 			default:
 				break;
@@ -350,11 +350,11 @@ var Outside = {
 				Notifications.notify(Outside,_('{0} is distracted by an interesting plant.',Engine.x_name));
 				Notifications.notify(Outside,_('{0} rests whenever {0} wishes to.',Engine.x_name));
 				Notifications.notify(Outside,_('{0} suddenly finds that the backup torch is lost somewhere along the trip.',Engine.x_name));
-				Notifications.notify(Outside,_('{0} always leaves belongings around.',Engine.x_name));
+				Notifications.notify(Outside,_('{0} is always leaving belongings around.',Engine.x_name));
 				break;
 			case "=C":
 				Notifications.notify(Outside,_('{0} sometimes can carry out the plan, but sometimes can’t get down to work.',Engine.x_name));
-				Notifications.notify(Outside,_('{0} is roughly on schedule, a little bit behind, but not much.',Engine.x_name));
+				Notifications.notify(Outside,_('{0} is roughly on schedule, a little bit behind, but not by much.',Engine.x_name));
 				break;
 			default:
 				break;	
@@ -383,13 +383,13 @@ var Outside = {
 		}
 		switch(Engine.res[2]){
 			case "E":
-				Notifications.notify(Outside,_('{0} imagines that there might be someone else in the town, and is very excited in changing cloth.',Engine.x_name));
+				Notifications.notify(Outside,_('{0} imagines that there might be someone else in the town, and is very excited in exchanging clothes.',Engine.x_name));
 				break;
 			case "*E":
-				Notifications.notify(Outside,_('{0} imagines to enter the town without encountering any other people.',Engine.x_name));
+				Notifications.notify(Outside,_('{0} imagines entering the town without encountering any other people.',Engine.x_name));
 				break;
 			case "=E":
-				Notifications.notify(Outside,_('{0} is not sure whether to expect or not to about meeting another person.',Engine.x_name));
+				Notifications.notify(Outside,_('{0} is not sure whether or not to expect meeting another person.',Engine.x_name));
 				break;
 			default:
 				break;

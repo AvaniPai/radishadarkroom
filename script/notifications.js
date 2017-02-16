@@ -25,6 +25,25 @@ var Notifications = {
 	elem: null,
 	
 	notifyQueue: {},
+
+	q: [],
+
+	_baseTimer: null,
+
+	enablePrint: function(t){
+		//window.clearTimeout(Notifications._baseTimer);
+		Notifications.printMessage(t);
+		if(Notifications.q.length > 0){
+			window.clearTimeout(Notifications._baseTimer);
+			var wait = 0;
+			t = Notifications.q.shift();
+			if(t.length > 30) wait = 2*1000;
+			else { wait = 1*1000; }
+			Notifications._baseTimer = Engine.setTimeout(Notifications.enablePrint.bind(null,t),1*1000);
+		} else {
+			Notifications._baseTimer = null;
+		}
+	},
 	
 	// Allow notification to the player
 	notify: function(module, text, noQueue) {
@@ -38,7 +57,13 @@ var Notifications = {
 				this.notifyQueue[module].push(text);
 			}
 		} else {
-			Notifications.printMessage(text);
+			var wait = 0;
+			if(text.length > 30) wait = 2*1000;
+			else { wait = 1*1000; }
+			if(Notifications._baseTimer == null) Notifications._baseTimer = Engine.setTimeout(Notifications.enablePrint.bind(null,text),wait);
+			else{
+				Notifications.q.push(text);
+			}
 		}
 		Engine.saveGame();
 	},
@@ -66,13 +91,6 @@ var Notifications = {
 			// Do this every time we add a new message, this way we never have a large backlog to iterate through. Keeps things faster.
 			Notifications.clearHidden();
 		});
-
-		/*var currMess = $('div#notifyCurr');
-		if( typeof currMess == 'undefined'){
-			curr.addClass('notification').css('opacity','0').text(t).prependTo('div#notifications');
-		} else {
-			currMess.text(t);
-		}*/
 	},
 	
 	printQueue: function(module) {

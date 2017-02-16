@@ -39,7 +39,12 @@ var Path = {
 			newname =people[Math.floor(Math.random() * people.length)];
 		}	
 		this.y_name = newname;
-		
+		var rando = Math.random()
+		if( rando < 0.33) this.precond = 'B';
+		else if (rando >= 0.33 && rando < 0.67) this.precond = 'D';
+		else { this.precond = 'N'; }
+
+		this._baseTimer = null;
 		
 		// Add the outfitting area
 		/*var outfitting = $('<div>').attr({'id': 'outfitting', 'data-legend': _('supplies:')}).appendTo(this.panel);
@@ -53,9 +58,46 @@ var Path = {
 			width: '80px'
 		}).appendTo('div#pathPanel');
 		
-		/*Notifications.notify(Path,_('There seems to be someone walking on the street not far away.'));
+		new Button.Button({
+			id: 'introButton',
+			text: _("make an introduction"),
+			click: Path.intro,
+			width: '80px'
+		}).appendTo('div#pathPanel');
+
+		new Button.Button({
+			id: 'walkAroundPathButton',
+			text: _("walk around"),
+			click: Path.walkAround,
+			cooldown: 7,
+			width: '80px'
+		}).appendTo('div#pathPanel');
+
+		new Button.Button({
+			id: 'huntButton',
+			text: _("try to hunt it"),
+			click: Path.huntBunny,
+			width: '80px'
+		}).appendTo('div#pathPanel');
+
+		new Button.Button({
+			id: 'startFireButton',
+			text: _("start a fire"),
+			click: Path.startFire,
+			width: '80px'
+		}).appendTo('div#pathPanel');
+
+		new Button.Button({
+			id: 'goodbyeButton',
+			text: _("say goodbye"),
+			click: Path.goodBye,
+			width: '80px'
+		}).appendTo('div#pathPanel');
+
+		
+		Notifications.notify(Path,_('There seems to be someone walking on the street not far away.'));
 		Notifications.notify(Path,_('{0} and the stranger notices each other at the same time.',Engine.x_name));
-		Notifications.notify(Path,_('The stranger walks to {0}, and makes a short introduction: My name is {1}.',Engine.x_name,Path.y_name));*/
+		Notifications.notify(Path,_('The stranger walks to {0}, and makes a short introduction: My name is {1}.',Engine.x_name,Path.y_name));
 		
 
 		Path.outfit = $SM.get('outfit');
@@ -67,38 +109,129 @@ var Path = {
 	},
 
 	updateButtons: function(){
-		
+		var finish = $('#finishButton.button');
+		var walka = $('#walkAroundPathButton.button');
+		var sf = $('#startFireButton.button');
+		finish.hide();
+		walka.hide();
+		sf.hide();
 	},
 
-	walk: function(){
-		Notifications.notify(Path,_("{0} faces the decision of going back to the room or entering the small town.",Engine.x_name));
-		var ret = $('#returnButton.button');
-		var enter = $('#enterButton.button');
-		ret.show();
-		enter.show();
-		var walkTown = $('#walkSmallTownButton.button');
-		Button.setDisabled(walkTown,true);
+	enableButton: function(id){
+		if(id === "huntButton") {
+			Notifications.notify(Path,_('{0} sees a rabbit resting in the grass not far away.',Engine.x_name));
+			Notifications.notify(Path,'It could be a good supplement to their food.');
+			var walka = $('#walkAroundPathButton.button');
+			walka.hide();
+		}
+		if (id === "goodbyeButton"){
+			Notifications.notify(Path,_('The morning comes.'));
+			Notifications.notify(Path,_('{0} and {1} both feel there is not much to see in the small town.',Engine.x_name,Path.y_name));
+			Notifications.notify(Path,_('They decide to leave the town and go back.'));
+		}
+		var butt = $(_('#{0}.button',id));
+		butt.show();
+		window.clearTimeout(Path._baseTimer);
 	},
 
-	back: function(){
-		var walkButt = $('#walkSmallTownButton.button');
-		walkButt.hide();
-		Notifications.notify(Room,_("{0} goes back to the room. {0}’s trip temporarily ends here.",Engine.x_name));
-		var ret = $('#returnTownButton.button');
-		ret.hide();
-		Notifications.notify(Room,_("X goes back to the room. X’s trip temporarily ends here.",Engine.x_name));
-		Engine.travelTo(Room);
-		Engine.cleanUp();
+	intro: function(){
+		var introduction = $('#introButton.button');
+		introduction.hide();
+		Notifications.notify(Path,_('{0} says: “Hi, my name is {0}.”',Engine.x_name));
+		switch(this.precond){
+			case "B":
+				Notifications.notify(Path, _('{1} looks at {0} and says: "I cannot believe people as gorgeous as you actually exist."',Engine.x_name,Path.y_name));
+				break;
+			case "D":
+				Notifications.notify(Path,_('{1} looks at {0} and says: "I cannot believe people who look as awful as you actually exist."',Engine.x_name,Path.y_name));
+				break;
+			default:
+				break;
+		}
+		Notifications.notify(Path,_('Since both {0} and {1} do not know the small town, they decide to walk together through it.',Engine.x_name,Path.y_name));
+		var walka = $('#walkAroundPathButton.button');
+		walka.show();
 	},
 
-	enter: function(){
-		var walkTown = $('#walkSmallTownButton.button');
-		walkTown.hide();
-		Notifications.notify(Path,_("X enters the small town. The unknown trip begins.",Engine.x_name));
-		var enter = $('#enterButton.button');
-		enter.hide();
-		Engine.cleanUp();
+	walkAround: function(){
+		Path._baseTimer = Engine.setTimeout(Path.enableButton.bind(null,"huntButton"),7*1000);
 	},
+
+	huntBunny: function(){
+		switch(this.precond){
+			case "B":
+				Notifications.notify(Path,_('{0} picks up a sharp stone and aims at it.',Engine.x_name));
+				Notifications.notify(Path,_('{0} hits it! The rabbit seems to faint.',Engine.x_name));
+				Notifications.notify(Path,_('{0} says: "I am totally amazed by your excellent skill!"',Path.y_name));
+				break;
+			case "D":
+				Notifications.notify(Path,_('{0} picks up a sharp stone and aim at it.',Engine.x_name));
+				Notifications.notify(Path,_('{0} misses it! The rabbit runs away.',Engine.x_name));
+				Notifications.notify(Path,_('{0} says: "You are horrible at this!"',Path.y_name));
+				break;
+			case "N":
+				Notifications.notify(Path,_('{0} picks up a sharp stone and hit the rabbit.',Engine.x_name));
+				Notifications.notify(Path,_('The grass trembles, so it is hard to tell whether {0} missed it or not.',Engine.x_name));
+				Notifications.notify(Path,_('{0} hit it! Yet it only frightened the rabbit and still manages to run away.',Engine.x_name));
+				break;
+			default:
+				break;
+		}
+
+		Notifications.notify(Path,_('The night gradually falls.'));
+		Notifications.notify(Path,_('{0} finds a piece of wood. It could be used to start a campfire.',Engine.x_name));
+		var hunt = $('#huntButton.button');
+		hunt.hide();
+		var sf = $('#startFireButton.button');
+		sf.show();
+	},
+
+	startFire: function(){
+		switch(this.precond){
+			case "B":
+				Notifications.notify(Path,_('{0} rubs the wood skillfully, and start the fire very easily.',Engine.x_name));
+				Notifications.notify(Path,_('{0} says: "You have a natural talent for this."',Path.y_name));
+				break;
+			case "D":
+				Notifications.notify(Path,_('{0} rubs the wood for a long time, but cannot start the fire for a long time.',Engine.x_name));
+				Notifications.notify(Path,_('{0} finally start the fire after a long time trying.',Engine.x_name));
+				Notifications.notify(Path,_('{0} says: "I cannot stand your horrible work anymore."',Path.y_name));
+				break;
+			case "N":
+				Notifications.notify(Path,_('{0} rubs the wood, and start the fire.',Engine.x_name));
+				break;
+			default:
+				break;
+		}
+
+		Path._baseTimer = Engine.setTimeout(Path.enableButton.bind(null,"goodbyeButton"),3*1000);
+		var sf = $('startFireButton.button');
+		sf.hide();
+
+		Notifications.notify(Path,_('The night is deep.'));
+		Notifications.notify(Path,_('{0} and {1} fall asleep by the campfire.',Engine.x_name,Path.y_name));
+	},
+
+	goodBye: function(){
+		switch(this.precond){
+			case "B":
+				Notifications.notify(Path,_('Before leaving, {0} says: "You are a wonderful person; I admire and respect you. Goodbye."',Path.y_name));
+				break;
+			case "D":
+				Notifications.notify(Path,_('Before leaving, {0} says: "You are such a terrible person. I cannot see any value in you. Goodbye."',Path.y_name));
+				break;
+			case "N":
+				Notifications.notify(Path,_('{0} says: "Goodbye."',Path.y_name));
+				break;
+			default:
+				break;
+		}
+		var goodbye = $('#goodbyeButton.button');
+		var finish = $('#finishButton.button');
+		goodbye.hide();
+		finish.show();
+	},
+
 	exit: function(){
 		Engine.cleanUp();
 	},

@@ -565,23 +565,16 @@ var Room = {
 		}).appendTo('div#roomPanel');
 
 		new Button.Button({
-			id: 'papyrusButton',
-			text: _("pick up papyrus"),
-			click: Room.pickupPapyrus,
-			width: '80px'
-		}).appendTo('div#roomPanel');
-
-		new Button.Button({
-			id: 'notebookButton',
-			text: _("pick up notebook"),
-			click: Room.pickupNotebook,
-			width: '80px'
-		}).appendTo('div#roomPanel');
-
-		new Button.Button({
 			id: 'blowDustButton',
 			text: _("blow away dust"),
 			click: Room.blowDust,
+			width: '80px'
+		}).appendTo('div#roomPanel');
+
+		new Button.Button({
+			id: 'papyrusButton',
+			text: _("pick up papyrus"),
+			click: Room.pickupPapyrus,
 			width: '80px'
 		}).appendTo('div#roomPanel');
 
@@ -593,8 +586,15 @@ var Room = {
 		}).appendTo('div#roomPanel');
 
 		new Button.Button({
+			id: 'notebookButton',
+			text: _("pick up notebook"),
+			click: Room.pickupNotebook,
+			width: '80px'
+		}).appendTo('div#roomPanel');
+
+		new Button.Button({
 			id: 'diaryButton',
-			text: _("ready the diary"),
+			text: _("read the diary"),
 			click: Room.readDiary,
 			width: '80px'
 		}).appendTo('div#roomPanel');
@@ -608,7 +608,7 @@ var Room = {
 
 		new Button.Button({
 			id: 'sitButton',
-			text: _("sit back"),
+			text: _("go back"),
 			click: Room.sitBack,
 			cooldown: 3,
 			width: '80px'
@@ -1005,7 +1005,7 @@ var Room = {
 				break;
 			case "*O":
 				Notifications.notify(Room,_('After a very short time, {0} gave up probing the papyrus.',Engine.x_name));
-				Notifications.notify(Room,_('{0} doesn’t like those abstract ideas at all, and never understand why things need to be these complex.',Engine.x_name));
+				Notifications.notify(Room,_('{0} doesn’t like those abstract ideas at all, and never understand why things need to be this complex.',Engine.x_name));
 				Notifications.notify(Room,_('{0} likes simple and straightforward materials.',Engine.x_name));
 				break;
 			case "=0":
@@ -1031,7 +1031,7 @@ var Room = {
 				Notifications.notify(Room,_('{0} likes to do things for others.',Engine.x_name));
 				break;
 			case "=A":
-				Notifications.notify(Room,_('{0} can feel a little bit emotions, but is also not interested in other people’s problems.',Engine.x_name));
+				Notifications.notify(Room,_('{0} can feel a little emotional, but is also not interested in other people’s problems.',Engine.x_name));
 				break;
 			default:
 				break;
@@ -1042,7 +1042,7 @@ var Room = {
 		Notifications.notify(Room,_("Suddenly, {0} heard some cracking sounds outside the window.",Engine.x_name));
 		switch(Engine.res[4]){
 			case "N":
-				Notifications.notify(Room,_('{0} feel threatened and gets panic.',Engine.x_name));
+				Notifications.notify(Room,_('{0} feel threatened and starts to panic.',Engine.x_name));
 				Notifications.notify(Room,_('But {0} still decides to examine what happened.',Engine.x_name));
 				break;
 			case "*N":
@@ -1085,7 +1085,7 @@ var Room = {
 	},
 
 	sitBack: function(){
-		Notifications.notify(Room,_('The night is long, and the wind is blowing strongly.'));
+		Notifications.notify(Room,_('The night is long, and the wind blows strongly.'));
 		Notifications.notify(Room,_('There is no one around, and nothing else to do.'));
 		switch(Engine.res[2]){
 			case "E":
@@ -1094,7 +1094,7 @@ var Room = {
 				Notifications.notify(Room,_('{0} feels more comfortable around people.',Engine.x_name));
 				break;
 			case "*E":
-				Notifications.notify(Room,_('{0} feels comfortable alone. X doesn’t talk a lot.',Engine.x_name));
+				Notifications.notify(Room,_('{0} feels comfortable alone. {0} doesn’t talk a lot.',Engine.x_name));
 				Notifications.notify(Room,_('{0} doesn’t wish to meet anyone in the new world.',Engine.x_name));
 				break;
 			case "=E":
@@ -1109,7 +1109,7 @@ var Room = {
 	},
 
 	openDoor: function(){
-		Notifications.notify(Room,_('A deserted land unfolded in front of {0}. But there is not much to see in the sight.',Engine.x_name));
+		Notifications.notify(Room,_('A deserted land unfolds in front of {0}. But there is not much to see in the sight.',Engine.x_name));
 		var door = $('#openDoorButton.button');
 		door.hide();
 		Outside.init();

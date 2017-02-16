@@ -601,8 +601,18 @@ body.noMask #description {
 #dropMenu > div:hover {
 	text-decoration: underline;
 }
-ul.scale {
-	list-style-type: none;
+
+div.scale .wrap{
+	display: inline-block;
+}
+div.scale label{
+	display: block;
+	text-align: center;
+	margin: 0 0.2em;
+}
+div.scale input[type="radio"]{
+	display: block;
+	margin: 0.5em auto;
 }
 p#loading {
 	font-family: "Times New Roman", Times, serif;

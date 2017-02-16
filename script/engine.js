@@ -102,6 +102,7 @@
 			var x_name='';
 			var flipped=false;
 			var res = [];
+			var cond = '';
 			Engine.loadQuiz();
 			
 		},
@@ -853,49 +854,49 @@
 					'*NI see myself as someone who is relaxed, handles stress well.', 
 					'*NI see myself as someone who remains calm in tense situations.', 
 					'*NI see myself as someone who is emotionally stable, not easily upset.'];
-			var xq = ['I would prefer complex to simple problems.',
-					'I like to have the responsibility of handling a situation that requires a lot of thinking.',
-					'Thinking is not my idea of fun.',
-					'I would rather do something that requires little thought than something that is sure to challenge my thinking abilities.',
-					'I try to anticipate and avoid situations where there is likely a chance I will have to think in depth about something.',
-					'I find satisfaction in deliberating hard and for long hours.',
-					'I only think as hard as I have to.',
-					'I prefer to think about small, daily projects to long-term ones.',
-					'I like tasks that require little thought once I’ve learned them.',
-					'The idea of relying on thought to make my way to the top appeals to me.',
-					'I really enjoy a task that involves coming up with new solutions to problems.',
-					'Learning new ways to think doesn’t excite me very much.',
-					'I prefer my life to be filled with puzzles that I must solve.',
-					'The notion of thinking abstractly is appealing to me.',
-					'I would prefer a task that is intellectual, difficult, and important to one that is somewhat important but does not require much thought.',
-					'I feel relief rather than satisfaction after completing a task that required a lot of mental effort.',
-					'It’s enough for me that something gets the job done; I don’t care how or why it works.',
-					'I usually end up deliberating about issues even when they do not affect me personally.',
-					'I can always manage to solve difficult problems if I try hard enough.',
-					'If someone opposes me, I can find the means and ways to get what I want.',
-					'It is easy for me to stick to my aims and accomplish my goals.',
-					'I am confident that I could deal efficiently with unexpected events.',
-					'Thanks to my resourcefulness, I know how to handle unforeseen situations.',
-					'I can solve most problems if I invest the necessary effort.',
-					'I can remain calm when facing difficulties because I can rely on my coping abilities.',
-					'When I am confronted with a problem, I can usually find several solutions.',
-					'If I am in trouble, I can usually think of a solution.',
-					'I can usually handle whatever comes my way.',
-					'In uncertain times, I usually expect the best.',
-					'I always look on the bright side of things.',
-					'I’m always optimistic about my future.',
-					'When I undertake something new, I expect to succeed.',
-					'Where there’s a will, there’s a way.',
-					'In general, things turn out alright in the end.', 
-					'It is best not to get your hopes too high since you will probably be disappointed.',
-					'Rarely do I expect good things to happen.',
-					'If something can go wrong for me, it will.',
-					'I hardly ever expect things to go my way.',
-					'Things never work out the way I want them to.',
-					'If I make a decision on my own, I can pretty much count on the fact that it will turn out to be a poor one.',
-					'I rarely count on good things happening to me.',
-					'Better to expect defeat then it doesn’t hit so hard when it comes.']
-			var reg = oq.concat(cq.concat(eq.concat(aq.concat(nq))));
+			var xq = ['XI would prefer complex to simple problems.',
+					'XI like to have the responsibility of handling a situation that requires a lot of thinking.',
+					'XThinking is not my idea of fun.',
+					'XI would rather do something that requires little thought than something that is sure to challenge my thinking abilities.',
+					'XI try to anticipate and avoid situations where there is likely a chance I will have to think in depth about something.',
+					'XI find satisfaction in deliberating hard and for long hours.',
+					'XI only think as hard as I have to.',
+					'XI prefer to think about small, daily projects to long-term ones.',
+					'XI like tasks that require little thought once I’ve learned them.',
+					'XThe idea of relying on thought to make my way to the top appeals to me.',
+					'XI really enjoy a task that involves coming up with new solutions to problems.',
+					'XLearning new ways to think doesn’t excite me very much.',
+					'XI prefer my life to be filled with puzzles that I must solve.',
+					'XThe notion of thinking abstractly is appealing to me.',
+					'XI would prefer a task that is intellectual, difficult, and important to one that is somewhat important but does not require much thought.',
+					'XI feel relief rather than satisfaction after completing a task that required a lot of mental effort.',
+					'XIt’s enough for me that something gets the job done; I don’t care how or why it works.',
+					'XI usually end up deliberating about issues even when they do not affect me personally.',
+					'XI can always manage to solve difficult problems if I try hard enough.',
+					'XIf someone opposes me, I can find the means and ways to get what I want.',
+					'XIt is easy for me to stick to my aims and accomplish my goals.',
+					'XI am confident that I could deal efficiently with unexpected events.',
+					'XThanks to my resourcefulness, I know how to handle unforeseen situations.',
+					'XI can solve most problems if I invest the necessary effort.',
+					'XI can remain calm when facing difficulties because I can rely on my coping abilities.',
+					'XWhen I am confronted with a problem, I can usually find several solutions.',
+					'XIf I am in trouble, I can usually think of a solution.',
+					'XI can usually handle whatever comes my way.',
+					'XIn uncertain times, I usually expect the best.',
+					'XI always look on the bright side of things.',
+					'XI’m always optimistic about my future.',
+					'XWhen I undertake something new, I expect to succeed.',
+					'XWhere there’s a will, there’s a way.',
+					'XIn general, things turn out alright in the end.', 
+					'XIt is best not to get your hopes too high since you will probably be disappointed.',
+					'XRarely do I expect good things to happen.',
+					'XIf something can go wrong for me, it will.',
+					'XI hardly ever expect things to go my way.',
+					'XThings never work out the way I want them to.',
+					'XIf I make a decision on my own, I can pretty much count on the fact that it will turn out to be a poor one.',
+					'XI rarely count on good things happening to me.',
+					'XBetter to expect defeat then it doesn’t hit so hard when it comes.']
+			var reg = oq.concat(cq.concat(eq.concat(aq.concat(nq.concat(xq)))));
 
 			var form = $('<form>')
 				.attr('id','fm')
@@ -903,9 +904,9 @@
 			$('<p>')
 				.text("Personality Test")
 				.appendTo('#fm');
-			$('<p>')
+			/*$('<p>')
 				.text("I see myself as someone who:")
-				.appendTo('#fm');
+				.appendTo('#fm');*/
 			var ol = $('<ol>')
 				.attr('id','quiz')
 				.appendTo(form);
@@ -921,6 +922,30 @@
 				var type = reg[pos][0];
 				reg[pos] = reg[pos].slice(1,reg[pos].length);
 				var id = 'q'+count.toString()
+
+				var sdVal = '';
+				var dVal = '';
+				var naVal = type+'3';
+				var aVal = '';
+				var saVal = '';
+				
+				if(rev && type != 'X'){
+					sdVal = type+'5';
+					dVal = type+'4';
+					aVal = type+'2';
+					saVal = type+'1';
+				} else if(!rev && type != 'X') {
+					sdVal = type+'1';
+					dVal = type+'2';
+					aVal = type+'4';
+					saVal = type+'5';
+				} else {
+					sdVal = type+'0';
+					dVal = type+'0';
+					naVal = type+'0';
+					aVal = type+'0';
+					saVal = type+'0';
+				}
 				
 				$('<li>')
 					.addClass('question')
@@ -928,7 +953,77 @@
 					.attr('id',id)
 					.text(reg[pos])
 					.appendTo(ol);
-				var scale = $('<ul>')
+				var scale = $('<div>')
+					.addClass('scale')
+					.appendTo('#'+id);
+				var sdWrap = $('<div>')
+					.addClass('wrap')
+					.appendTo(scale);
+				$('<label>')
+					.attr('for','sd'+id)
+					.text('Strongly Disagree')
+					.appendTo(sdWrap);
+				$('<input>')
+					.attr('type','radio')
+					.attr('name',id)
+					.attr('id','sd'+id)
+					.attr('value',sdVal)
+					.appendTo(sdWrap);
+				var dWrap = $('<div>')
+					.addClass('wrap')
+					.appendTo(scale);
+				$('<label>')
+					.attr('for','d'+id)
+					.text('Disagree')
+					.appendTo(dWrap);
+				$('<input>')
+					.attr('type','radio')
+					.attr('name',id)
+					.attr('id','d'+id)
+					.attr('value',dVal)
+					.appendTo(dWrap);
+				var naWrap = $('<div>')
+					.addClass('wrap')
+					.appendTo(scale);
+				$('<label>')
+					.attr('for','na'+id)
+					.text('Neither Agree nor Disagree')
+					.appendTo(naWrap);
+				$('<input>')
+					.attr('type','radio')
+					.attr('name',id)
+					.attr('id','na'+id)
+					.attr('value',naVal)
+					.appendTo(naWrap);
+				var aWrap = $('<div>')
+					.addClass('wrap')
+					.appendTo(scale);
+				$('<label>')
+					.attr('for','a'+id)
+					.text('Agree')
+					.appendTo(aWrap);
+				$('<input>')
+					.attr('type','radio')
+					.attr('name',id)
+					.attr('id','a'+id)
+					.attr('value',aVal)
+					.appendTo(aWrap);
+				var saWrap = $('<div>')
+					.addClass('wrap')
+					.appendTo(scale);
+				$('<label>')
+					.attr('for','sa'+id)
+					.text('Strongly Agree')
+					.appendTo(saWrap);
+				$('<input>')
+					.attr('type','radio')
+					.attr('name',id)
+					.attr('id','sa'+id)
+					.attr('value',saVal)
+					.appendTo(saWrap);
+
+				
+				/*var scale = $('<ul>')
 					.addClass('scale')
 					.appendTo('#'+id);
 				$('<li>')
@@ -955,25 +1050,7 @@
 					.addClass('option')
 					.attr('id',id+'sa')
 					.text('Strongly Agree')
-					.appendTo(scale);
-					
-				var sdVal = '';
-				var dVal = '';
-				var naVal = type+'3';
-				var aVal = '';
-				var saVal = '';
-				
-				if(rev){
-					sdVal = type+'5';
-					dVal = type+'4';
-					aVal = type+'2';
-					saVal = type+'1';
-				} else {
-					sdVal = type+'1';
-					dVal = type+'2';
-					aVal = type+'4';
-					saVal = type+'5';
-				}
+					.appendTo(scale); 
 
 				$('<input>')
 					.attr('type','radio')
@@ -999,11 +1076,12 @@
 					.attr('type','radio')
 					.attr('name',id)
 					.attr('value',saVal)
-					.appendTo('#'+id+'sa');
+					.appendTo('#'+id+'sa');*/
 				
 				reg.splice(pos,1);
 				
 			}
+
 			$('<input>')
 				.attr('type','button')
 				.attr('onclick','Engine.score()')
@@ -1022,28 +1100,34 @@
 				Engine.x_name = people[Math.floor(Math.random() * people.length)];
 
 				$('<p>')
-					.attr('id','loading')
-					.text('Calculating your personality test result...')
-					.prependTo('#wrapper');
-
-				//console.log("sleeping");
-				await sleep(2000);
-				//console.log("awake");
-				$('#loading').remove();
-				$('<p>')
 					.attr('id','title')
 					.addClass('persText')
 					.text('Welcome to A Dark Room')
 					.prependTo('#wrapper');
+				if(Engine.cond[1] == 'A'){
+					switch(Engine.cond[0]){
+						case '1':
+							$('<p>')
+								.text('Based on the personality test, we have generated a virtual representation whose personality similar to yours.')
+								.appendTo('#title');
+							break;
+						case '2':
+							$('<p>')
+								.text('Based on the personality test, we have generated a virtual representation whose personality similar to yours.')
+								.appendTo('#title');
+						default:
+							break;
+					}
+				} else {
+					$('<p>')
+						.text(_('This is a story about {0}\'s strange experiences in a new world.',Engine.x_name))
+						.appendTo('#title');
+				}
+				
 
-				$('<p>')
-					.text('Welcome to A Dark Room')
-					.appendTo('#title');
-				$('<p>')
-					.text(_('This is a story about {0}\'s strange experiences in a new world'),Engine.x_name)
-					.appendTo('#title');
+				
 
-				sleep(5000);
+				await sleep(5000);
 				$('#title').remove();
 				Engine.completeInit(Engine.res);
 				
@@ -1073,6 +1157,8 @@
 						else if ( scores.reduce(sum) < 24) return '*'+letter;
 						return '='+letter;
 						break;
+					case "X":
+						break;
 					default:
 						if(scores.reduce(sum) > 27) return letter;
 						else if ( scores.reduce(sum) < 27) return '*'+letter;
@@ -1090,7 +1176,8 @@
 			var E = [];
 			var A = [];
 			var N = [];
-			for(var i=1; i<11; i++){
+			var x = [];
+			for(var i=1; i<86; i++){
 				var data = $('input[name=q'+i.toString()+']:checked').val();
 				//update double array
 				//console.log(data);
@@ -1111,6 +1198,8 @@
 						N.push(Number(data[1]));
 						break;
 					default:
+						//console.log(_('x! {0}',data));
+						x.push(data);
 						break;
 				}
 			}
@@ -1137,10 +1226,51 @@
 			Engine.res = ocean;
 
 			console.log(ocean);
-			Engine.pause(ocean); 
-
 			$('#fm')
 				.remove();
+			$('<input>')
+				.attr('type','button')
+				.attr('onclick','Engine.condTwo()')
+				.attr('value','One')
+				.attr('id', 'butOne')
+				.prependTo('#wrapper');
+			$('<input>')
+				.attr('type','button')
+				.attr('onclick','Engine.condTwo()')
+				.attr('value','Two')
+				.attr('id', 'butTwo')
+				.prependTo('#wrapper');
+		},
+
+		condTwo: function(){
+			if (document.getElementById('butOne').checked) Engine.cond +='1';
+			else { Engine.cond += '2';}
+			document.getElementById('butOne').style.visibility = 'hidden';
+			document.getElementById('butTwo').style.visibility = 'hidden';
+
+			$('<input>')
+				.attr('type','button')
+				.attr('onclick','Engine.finale()')
+				.attr('value','A')
+				.attr('id','butA')
+				.prependTo('#wrapper');
+			$('<input>')
+				.attr('type','button')
+				.attr('onclick','Engine.finale()')
+				.attr('value','B')
+				.attr('id','butB')
+				.prependTo('#wrapper');
+		},
+
+		finale: function(){	
+			if (document.getElementById('butA').checked) Engine.cond +='A';
+			else { Engine.cond += 'B';}
+			$('#butOne').remove();
+			$('#butTwo').remove();
+			$('#butA').remove();
+			$('#butB').remove();
+			
+			Engine.pause(Engine.res); 
 
 		},
 
