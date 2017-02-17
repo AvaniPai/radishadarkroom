@@ -643,12 +643,10 @@ var Room = {
 		if($SM.get('game.builder.level') == 1 && $SM.get('stores.wood', true) < 0) {
 			Engine.setTimeout(Room.unlockForest, Room._NEED_WOOD_DELAY);
 		}*/
-		Engine.setTimeout($SM.collectIncome, 1000);
-		Notifications.notify(null,_("{0} wakes up in a dark room.", Engine.x_name));
-		Notifications.notify(null,_("{0} can hardly remember what happened before",Engine.x_name));
-		Notifications.notify(null,_("It's midnight"));
+		Notifications.notify(Room,_("It's midnight"));
+		Notifications.notify(Room,_("{0} wakes up in a dark room.", Engine.x_name));
 		Notifications.notify(Room, _("the room is {0}. {1} is curled up on the ground", Room.TempEnum.fromInt($SM.get('game.temperature.value')).text, Engine.x_name));
-		Notifications.notify(null,_("{0} knows nothing about the world",Engine.x_name));
+		Notifications.notify(Room,_("{0} knows nothing about the world",Engine.x_name));
 		switch(Engine.res[4]){
 			case "N":
 				Notifications.notify(Room,_('{0} gets really upset. {0}\'s mood is very unstable, going up and down easily',Engine.x_name));
@@ -906,9 +904,21 @@ var Room = {
 	},
 
 	enableButton: function(id) {
+		if(id == 'scary'){
+			Room.scary();
+			return;
+		} 
 		var butt = $(_('#{0}.button',id));
 		butt.show();
 		if(id == 'openDoorButton') Notifications.notify(Room,_('The day comes'));
+		if(id == 'paintingButton'){
+			var papyrus = $('#papyrusButton.button');
+			var notebook = $('#notebookButton.button');
+			var walk = $('#walkCornerButton.button');
+			walk.hide();
+			papyrus.show();
+			notebook.show();
+		}
 		window.clearTimeout(Room._baseTimer);
 
 	},
@@ -935,18 +945,14 @@ var Room = {
 	walkCorner: function(){
 		Notifications.notify(Room,_("{0} removes the suede cover and finds a middle-scale oil painting, a scroll of papyrus, and an old thick notebook.",Engine.x_name));
 		Notifications.notify(Room,_("There is also a pile of hay, some ropes, a compass and some other stuff."));
-		var painting = $('#paintingButton.button');
-		var papyrus = $('#papyrusButton.button');
-		var notebook = $('#notebookButton.button');
-		var walk = $('#walkCornerButton.button');
-		painting.show();
-		papyrus.show();
-		notebook.show();
-		walk.hide();
+		Room._baseTimer = Engine.setTimeout(Room.enableButton.bind(null,"paintingButton"),2*1000);
+		
 	},
 
 	pickupPainting: function(){
 		Notifications.notify(Room,_("The painting seems to be the view of the unknown world. But it is covered with thick dust and cannot be seen very clearly."));
+		
+		
 		var dust = $('#blowDustButton.button');
 		var painting = $('#paintingButton.button');
 		dust.show();
@@ -959,6 +965,7 @@ var Room = {
 		var study = $('#studyButton.button');
 		study.show();
 		Notifications.notify(Room,_('{0} unrolls the scroll of papyrus',Engine.x_name));
+		Notifications.notify(Room,_('The papyrus is filled with strange and unrecognizable symbols and figures. Seems like an ancient language.'));
 	},
 
 	pickupNotebook: function(){
@@ -1039,6 +1046,9 @@ var Room = {
 		var diary = $('#diaryButton.button');
 		diary.hide();
 		//add timer here?
+		Room._baseTimer = Engine.setTimeout(Room.enableButton.bind(null,'scary'),5*1000);
+	},
+	scary: function(){
 		Notifications.notify(Room,_("Suddenly, {0} heard some cracking sounds outside the window.",Engine.x_name));
 		switch(Engine.res[4]){
 			case "N":

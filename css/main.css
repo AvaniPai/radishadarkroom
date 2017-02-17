@@ -608,7 +608,7 @@ div.scale .wrap{
 div.scale label{
 	display: block;
 	text-align: center;
-	margin: 0 0.2em;
+	margin: 0 0.5em;
 }
 div.scale input[type="radio"]{
 	display: block;

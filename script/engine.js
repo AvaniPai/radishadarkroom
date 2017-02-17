@@ -102,8 +102,8 @@
 			var x_name='';
 			var flipped=false;
 			var res = [];
-			var cond = '';
-			Engine.loadQuiz();
+			var cond = "";
+			Engine.loadCondition();
 			
 		},
 
@@ -808,8 +808,33 @@
 			return setTimeout(callback, timeout);
 
 		},
-		//TODO: double check
+
+		loadCondition: function(){
+			var newpart = $('<p>')
+				.text("Please click the number and letters on the note you got.")
+				.attr('id','newpart')
+				.prependTo('#wrapper');
+			$('<div>')
+				.attr('id','blah')
+				.appendTo(newpart);
+			$('<input>')
+				.attr('type','button')
+				.attr('onclick','Engine.condOne()')
+				.attr('value','One')
+				.attr('id', 'butOne')
+				.appendTo('#blah');
+			$('<input>')
+				.attr('type','button')
+				.attr('onclick','Engine.condTwo()')
+				.attr('value','Two')
+				.attr('id', 'butTwo')
+				.appendTo('#blah');
+		},
+
 		loadQuiz: function(){
+
+			
+
 			var oq = ['OI see myself as someone who is inventive.', 
 					'OI see myself as someone who is original, comes up with new ideas.', 
 					'OI see myself as someone who values artistic, aesthetic experiences.',
@@ -847,7 +872,7 @@
 					'*AI see myself as someone who starts quarrels with others.', 
 					'*AI see myself as someone who is sometimes rude to others.'];
 			var nq = ['NI see myself as someone who is depressed, blue.', 
-					'NIsee myself as someone who can be moody.', 
+					'NI see myself as someone who can be moody.', 
 					'NI see myself as someone who can be tense.', 
 					'NI see myself as someone who gets nervous easily.', 
 					'NI see myself as someone who worries a lot.', 
@@ -902,7 +927,10 @@
 				.attr('id','fm')
 				.prependTo('#wrapper');
 			$('<p>')
-				.text("Personality Test")
+				.text("Welcome to Student Personality Data Project.")
+				.appendTo('#fm');
+			$('<p>')
+				.text("Department of Advertising and Department of Psychology has initiated a longitude personality data collection in order to establish a panel database for further research projects. All the data will be kept anonymous, and will not be counted as your course performance.")
 				.appendTo('#fm');
 			/*$('<p>')
 				.text("I see myself as someone who:")
@@ -1023,65 +1051,12 @@
 					.appendTo(saWrap);
 
 				
-				/*var scale = $('<ul>')
-					.addClass('scale')
-					.appendTo('#'+id);
-				$('<li>')
-					.addClass('option')
-					.attr('id',id+'sd')
-					.text('Strongly Disagree')
-					.appendTo(scale);
-				$('<li>')
-					.addClass('option')
-					.attr('id',id+'d')
-					.text('Disagree')
-					.appendTo(scale);
-				$('<li>')
-					.addClass('option')
-					.attr('id',id+'na')
-					.text('Neither Agree nor Disagree')
-					.appendTo(scale);
-				$('<li>')
-					.addClass('option')
-					.attr('id',id+'a')
-					.text('Agree')
-					.appendTo(scale);
-				$('<li>')
-					.addClass('option')
-					.attr('id',id+'sa')
-					.text('Strongly Agree')
-					.appendTo(scale); 
-
-				$('<input>')
-					.attr('type','radio')
-					.attr('name',id)
-					.attr('value',sdVal)
-					.appendTo('#'+id+'sd');
-				$('<input>')
-					.attr('type','radio')
-					.attr('name',id)
-					.attr('value',dVal)
-					.appendTo('#'+id+'d');
-				$('<input>')
-					.attr('type','radio')
-					.attr('name',id)
-					.attr('value',naVal)
-					.appendTo('#'+id+'na');
-				$('<input>')
-					.attr('type','radio')
-					.attr('name',id)
-					.attr('value',aVal)
-					.appendTo('#'+id+'a');
-				$('<input>')
-					.attr('type','radio')
-					.attr('name',id)
-					.attr('value',saVal)
-					.appendTo('#'+id+'sa');*/
-				
 				reg.splice(pos,1);
 				
 			}
-
+			$('<p>')
+				.text('Thank you for helping us collecting data!')
+				.appendTo(form);
 			$('<input>')
 				.attr('type','button')
 				.attr('onclick','Engine.score()')
@@ -1123,9 +1098,7 @@
 						.text(_('This is a story about {0}\'s strange experiences in a new world.',Engine.x_name))
 						.appendTo('#title');
 				}
-				
 
-				
 
 				await sleep(5000);
 				$('#title').remove();
@@ -1210,68 +1183,75 @@
 			ocean.push(attribute(A,'A'));
 			ocean.push(attribute(N,'N'));
 
-			console.log(ocean);
-			if(Math.random() < 0.5) {
-				Engine.flipped = true;
-				for(var i=0; i<ocean.length; i++){
-					if(ocean[i][0] === '*') ocean[i] = ocean[i][1];
-					else if(ocean[i][0] === '='){
-						if(Math.random() < 0.5) ocean[i] = '*'+ocean[i][1];
-						else { ocean[i] = ocean[i][1];}
-					}
-					else{ ocean[i] = '*'+ocean[i]; }
-				}
-			}
-
 			Engine.res = ocean;
-
-			console.log(ocean);
+			console.log(Engine.res);
+			if(Engine.flipped == true) {
+					for(var i=0; i<Engine.res.length; i++){
+						if(Engine.res[i][0] === '*') Engine.res[i] = Engine.res[i][1];
+						else if(Engine.res[i][0] === '='){
+							if(Math.random() < 0.5) Engine.res[i] = '*'+Engine.res[i][1];
+							else { Engine.res[i] = Engine.res[i][1];}
+						}
+						else{ Engine.res[i] = '*'+Engine.res[i]; }
+					}
+				}
+			console.log(Engine.res);
+			Engine.pause(ocean);
 			$('#fm')
 				.remove();
-			$('<input>')
-				.attr('type','button')
-				.attr('onclick','Engine.condTwo()')
-				.attr('value','One')
-				.attr('id', 'butOne')
-				.prependTo('#wrapper');
-			$('<input>')
-				.attr('type','button')
-				.attr('onclick','Engine.condTwo()')
-				.attr('value','Two')
-				.attr('id', 'butTwo')
-				.prependTo('#wrapper');
-		},
 
-		condTwo: function(){
-			if (document.getElementById('butOne').checked) Engine.cond +='1';
-			else { Engine.cond += '2';}
+			
+		},
+		condOne: function(){
+			Engine.cond ='1';
+			console.log(Boolean(Engine.flipped));
 			document.getElementById('butOne').style.visibility = 'hidden';
 			document.getElementById('butTwo').style.visibility = 'hidden';
 
 			$('<input>')
 				.attr('type','button')
-				.attr('onclick','Engine.finale()')
+				.attr('onclick','Engine.condA()')
 				.attr('value','A')
 				.attr('id','butA')
-				.prependTo('#wrapper');
+				.appendTo('#blah');
 			$('<input>')
 				.attr('type','button')
-				.attr('onclick','Engine.finale()')
+				.attr('onclick','Engine.condB()')
 				.attr('value','B')
 				.attr('id','butB')
-				.prependTo('#wrapper');
+				.appendTo('#blah');
 		},
 
-		finale: function(){	
-			if (document.getElementById('butA').checked) Engine.cond +='A';
-			else { Engine.cond += 'B';}
-			$('#butOne').remove();
-			$('#butTwo').remove();
-			$('#butA').remove();
-			$('#butB').remove();
-			
-			Engine.pause(Engine.res); 
+		condTwo: function(){
+			Engine.cond ='2';
+			Engine.flipped = true;
+			console.log(Boolean(Engine.flipped));
+			document.getElementById('butOne').style.visibility = 'hidden';
+			document.getElementById('butTwo').style.visibility = 'hidden';
 
+			$('<input>')
+				.attr('type','button')
+				.attr('onclick','Engine.condA()')
+				.attr('value','A')
+				.attr('id','butA')
+				.appendTo('#blah');
+			$('<input>')
+				.attr('type','button')
+				.attr('onclick','Engine.condB()')
+				.attr('value','B')
+				.attr('id','butB')
+				.appendTo('#blah');
+		},
+		condA: function(){
+			Engine.cond +='A';
+			$('#newpart').remove();
+			Engine.loadQuiz();
+		},
+
+		condB: function(){
+			Engine.cond += 'B';
+			$('#newpart').remove();
+			Engine.loadQuiz();
 		},
 
 		decidePersonality: function(ocean){
