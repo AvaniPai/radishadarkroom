@@ -573,7 +573,7 @@ var Room = {
 
 		new Button.Button({
 			id: 'papyrusButton',
-			text: _("pick up papyrus"),
+			text: _("pick up parchment"),
 			click: Room.pickupPapyrus,
 			width: '80px'
 		}).appendTo('div#roomPanel');
@@ -929,7 +929,7 @@ var Room = {
 		var walk = $('#walkRoomButton.button');
 		var look = $('#lookButton.button');
 		walk.show();
-		look.remove(); //or hide
+		look.hide(); //or hide
 	},
 
 	walkAround: function(){
@@ -943,14 +943,14 @@ var Room = {
 	},
 
 	walkCorner: function(){
-		Notifications.notify(Room,_("{0} removes the suede cover and finds a middle-scale oil painting, a scroll of papyrus, and an old thick notebook.",Engine.x_name));
-		Notifications.notify(Room,_("There is also a pile of hay, some ropes, a compass and some other stuff."));
+		Notifications.notify(Room,_("{0} removes the suede cover and finds underneath are a middle-scale oil painting, a scroll of parchment, an old thick notebook. ",Engine.x_name));
+		Notifications.notify(Room,_("There are also some ropes, a compass, a pile of hay and some other stuff."));
 		Room._baseTimer = Engine.setTimeout(Room.enableButton.bind(null,"paintingButton"),2*1000);
 		
 	},
 
 	pickupPainting: function(){
-		Notifications.notify(Room,_("The painting seems to be the view of the unknown world. But it is covered with thick dust and cannot be seen very clearly."));
+		Notifications.notify(Room,_("The painting seems to be a view of the unknown world, but it is covered with thick dust and cannot be seen very clearly."));
 		
 		
 		var dust = $('#blowDustButton.button');
@@ -964,8 +964,8 @@ var Room = {
 		papyrus.hide();
 		var study = $('#studyButton.button');
 		study.show();
-		Notifications.notify(Room,_('{0} unrolls the scroll of papyrus',Engine.x_name));
-		Notifications.notify(Room,_('The papyrus is filled with strange and unrecognizable symbols and figures. Seems like an ancient language.'));
+		Notifications.notify(Room,_('{0} unrolls the scroll of parchment',Engine.x_name));
+		Notifications.notify(Room,_('The parchment is full of strange and unrecognizable symbols and figures. Seems like an ancient language.'));
 	},
 
 	pickupNotebook: function(){
@@ -979,13 +979,13 @@ var Room = {
 	blowDust: function(){
 		switch(Engine.res[0]){
 			case "O":
-				Notifications.notify(Room, _("{0} can see a forest, a river, and a beautiful sunset on the painting.",Engine.x_name));
-				Notifications.notify(Room,_('{0} can imagine how the new world becomes vivid with lots of details.',Engine.x_name));
+				Notifications.notify(Room, _("{0} sees the forest, the river, and a beautiful sunset on the painting.",Engine.x_name));
+				Notifications.notify(Room,_('{0} imagines how the new world becomes vivid with lots of details.',Engine.x_name));
 				Notifications.notify(Room, _('{0} enjoys the beauty of the art and the beauty of nature.',Engine.x_name));
-				Notifications.notify(Room,_('{0} can always see beauty in things that others might not notice.',Engine.x_name));
+				Notifications.notify(Room,_('{0} always sees beauty in things that others might not notice.',Engine.x_name));
 				break;
 			case "*O":
-				Notifications.notify(Room,_('{0} can see the forest, the river, and a beautiful sunset on the painting, but is not emotionally moved by it.',Engine.x_name));
+				Notifications.notify(Room,_('{0} see the forest, the river, and a beautiful sunset on the painting, but is not moved by it.',Engine.x_name));
 				Notifications.notify(Room,_('{0} does not have a very good imagination to imagine the new world with lots of details.',Engine.x_name));
 				break;
 			case "=O":
@@ -1006,18 +1006,17 @@ var Room = {
 		study.hide();
 		switch(Engine.res[0]){
 			case "O":
-				Notifications.notify(Room,_('{0} loves difficult and challenging materials.',Engine.x_name));
-				Notifications.notify(Room,_('{0} is quick in understanding.',Engine.x_name));
-				Notifications.notify(Room,_('{0} is full of ideas, and begins to scrutinize the symbols, hoping to get some interesting findings.',Engine.x_name));
+				Notifications.notify(Room,_('{0} loves difficult and challenging materials, so {0} begins to scrutinize the symbols',Engine.x_name));
+				Notifications.notify(Room,_('{0} is full of ideas, and is quick in understanding, so {0} soon finds something interesting from the symbols',Engine.x_name));
 				break;
 			case "*O":
-				Notifications.notify(Room,_('After a very short time, {0} gave up probing the papyrus.',Engine.x_name));
+				Notifications.notify(Room,_('After a very short time, {0} gives up studying the symbols',Engine.x_name));
 				Notifications.notify(Room,_('{0} doesn’t like those abstract ideas at all, and never understand why things need to be this complex.',Engine.x_name));
 				Notifications.notify(Room,_('{0} likes simple and straightforward materials.',Engine.x_name));
 				break;
 			case "=0":
-				Notifications.notify(Room,_('After trying for some time, {0} gave up probing the papyrus.',Engine.x_name));
-				Notifications.notify(Room,_('{0} does not try to avoid all the complex problems, but {0} also does not have a strong interest in it.',Engine.x_name));
+				Notifications.notify(Room,_('After trying for some time, {0} gives up studying the symbols',Engine.x_name));
+				Notifications.notify(Room,_('{0} does not try to avoid all the complex problems, but {0} also does not also have strongs interest in it.',Engine.x_name));
 				break;
 			default:
 				break;
@@ -1025,7 +1024,7 @@ var Room = {
 	},
 
 	readDiary: function(){
-		Notifications.notify(Room,_('The diary describes the traveler’s life in general and the traveler\'s lovely child. It narrates some family issues and emotional struggles.'));
+		Notifications.notify(Room,_('The diary describes the traveler’s family story. It narrates some emotional struggles.'));
 		switch(Engine.res[3]){
 			case "A":
 				Notifications.notify(Room,_('{0} is not really interested in the traveler’s problems, and is indifferent to the traveler’s feeling.',Engine.x_name));

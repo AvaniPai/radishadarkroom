@@ -61,7 +61,7 @@ var Notifications = {
 			var wait = 0;
 			if(text.length > 30) wait = 2*1000;
 			else { wait = 1*1000; }
-			if(t.includes('The night is long')) wait = 3*1000;
+			if(text.includes('The night is long')) wait = 3*1000;
 			if(Notifications._baseTimer == null) Notifications._baseTimer = Engine.setTimeout(Notifications.enablePrint.bind(null,text),wait);
 			else{
 				Notifications.q.push(text);

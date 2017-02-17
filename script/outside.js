@@ -293,7 +293,7 @@ var Outside = {
  	plan: function(){
 		switch(Engine.res[1]){
 			case "C":
-				Notifications.notify(Outside,_('{0} plans every details of the trip.',Engine.x_name));
+				Notifications.notify(Outside,_('{0} plans every detail of the trip.',Engine.x_name));
 				Notifications.notify(Outside,_('{0} decides to leave at 10 AM.',Engine.x_name));
 				break;
 			case "*C":
@@ -361,7 +361,7 @@ var Outside = {
 		}
 		Outside.arriveTownTimer = Engine.setTimeout(Outside.displayTown,6*1000);
 		var walkTo = $('#walkTowardButton.button');
-		Button.setDisabled(walkTo,false);
+		Button.setDisabled(walkTo,true);
 	},
 
 	displayTown: function(){
@@ -373,9 +373,10 @@ var Outside = {
 				break;
 			case "*O":
 				Notifications.notify(Outside,_('{0} does not feel excited about entering the town.',Engine.x_name));
+				Notifications.notify(Outside,_('{0} does not like new adventure in general.',Engine.x_name));
 				break;
 			case "=O":
-				Notifications.notify(Outside,_('{0} does not have strong feelings.',Engine.x_name));
+				Notifications.notify(Outside,_('{0} feels okay about entering the town.',Engine.x_name));
 				Notifications.notify(Outside,_('But {0} still wants to enter the small town.',Engine.x_name));
 				break;
 			default:
@@ -383,17 +384,18 @@ var Outside = {
 		}
 		switch(Engine.res[2]){
 			case "E":
-				Notifications.notify(Outside,_('{0} imagines that there might be someone else in the town, and is very excited in exchanging clothes.',Engine.x_name));
+				Notifications.notify(Outside,_('{0} is so excited about finally getting a chance to meet some other people.',Engine.x_name));
 				break;
 			case "*E":
-				Notifications.notify(Outside,_('{0} imagines entering the town without encountering any other people.',Engine.x_name));
+				Notifications.notify(Outside,_('{0} wishes to explore the town without encountering any other people.',Engine.x_name));
 				break;
 			case "=E":
-				Notifications.notify(Outside,_('{0} is not sure whether or not to expect meeting another person.',Engine.x_name));
+				Notifications.notify(Outside,_('{0} is fine regardless of whether {0} encounters some people or not.',Engine.x_name));
 				break;
 			default:
 				break;
 		}
+
 	},
 
 	getMaxPopulation: function() {

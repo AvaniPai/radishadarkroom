@@ -97,7 +97,7 @@ var Path = {
 		
 		Notifications.notify(Path,_('There seems to be someone walking on the street not far away.'));
 		Notifications.notify(Path,_('{0} and the stranger notices each other at the same time.',Engine.x_name));
-		Notifications.notify(Path,_('The stranger walks to {0}, and makes a short introduction: My name is {1}.',Engine.x_name,Path.y_name));
+		Notifications.notify(Path,_('The stranger walks to {0}, and makes a short introduction: "My name is {1}".',Engine.x_name,Path.y_name));
 		
 
 		Path.outfit = $SM.get('outfit');
@@ -112,9 +112,13 @@ var Path = {
 		var finish = $('#finishButton.button');
 		var walka = $('#walkAroundPathButton.button');
 		var sf = $('#startFireButton.button');
+		var hunt = $('#huntButton.button');
+		var good = $('#goodbyeButton.button');
 		finish.hide();
 		walka.hide();
 		sf.hide();
+		hunt.hide();
+		good.hide();
 	},
 
 	enableButton: function(id){
@@ -205,7 +209,7 @@ var Path = {
 		}
 
 		Path._baseTimer = Engine.setTimeout(Path.enableButton.bind(null,"goodbyeButton"),3*1000);
-		var sf = $('startFireButton.button');
+		var sf = $('#startFireButton.button');
 		sf.hide();
 
 		Notifications.notify(Path,_('The night is deep.'));
