@@ -103,6 +103,7 @@
 			var flipped=false;
 			var res = [];
 			var cond = "";
+			var precond = "";
 			Engine.loadCondition();
 			
 		},
@@ -810,6 +811,65 @@
 		},
 
 		loadCondition: function(){
+			var bdn = $('<p>')
+					.text('Please select the ending configuration you would like.')	
+					.attr('id','bdn')
+					.prependTo('#wrapper');
+			var choices = $('<div>')
+					.appendTo(bdn);
+			$('<label>')
+				.attr('for','bchoice')
+				.text('B')
+				.appendTo(choices);
+			$('<input>')
+				.attr('type','radio')
+				.attr('name','bdnSelect')
+				.attr('id','bchoice')
+				.attr('value','b')
+				.appendTo(choices);
+			$('<label>')
+				.attr('for','dchoice')
+				.text('D')
+				.appendTo(choices);
+			$('<input>')
+				.attr('type','radio')
+				.attr('name','bdnSelect')
+				.attr('id','dchoice')
+				.attr('value','d')
+				.appendTo(choices);
+			$('<label>')
+				.attr('for','nchoice')
+				.text('N')
+				.appendTo(choices);
+			$('<input>')
+				.attr('type','radio')
+				.attr('name','bdnSelect')
+				.attr('id','nchoice')
+				.attr('value','n')
+				.appendTo(choices);
+			$('<input>')
+				.attr('type','button')
+				.attr('onclick','Engine.loadFullNumVar()')
+				.attr('value','Submit')
+				.appendTo(choices);
+		},
+
+		loadFullNumVar: function(){
+			var last = $('input[name=bdnSelect]:checked').val();
+			switch(last){
+				case "b":
+					Engine.precond = 'B';
+					break;
+				case "d":
+					Engine.precond = 'D';
+					break;
+				case "n":
+					Engine.precond = 'N';
+					break;
+				default:
+					break;
+			}
+			$('#bdn').remove();
 			var newpart = $('<p>')
 				.text("Please click the number and letters on the note you got.")
 				.attr('id','newpart')
@@ -1083,7 +1143,7 @@
 					switch(Engine.cond[0]){
 						case '1':
 							$('<p>')
-								.text('Based on the personality test, we have generated a virtual representation whose personality differs from yours.')
+								.text('Based on the personality test, we have generated a virtual representation whose personality is similar from yours.')
 								.appendTo('#title');
 							break;
 						case '2':
